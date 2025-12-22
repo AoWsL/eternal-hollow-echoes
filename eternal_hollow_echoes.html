@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>永恆號：黑洞迴響 | 完整劇本檔案</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-red: #ff0055;
+            --bg-dark: #050505;
+            --panel-bg: rgba(20, 20, 25, 0.9);
+            --text-main: #c0c0c0;
+            --text-dim: #888;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        .font-mono {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* 掃描線效果 */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* 自定義滾動條 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-blue);
+        }
+
+        /* 文字發光效果 */
+        .glow-text {
+            text-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+        }
+        
+        .glow-red {
+            text-shadow: 0 0 5px rgba(255, 0, 85, 0.5);
+        }
+
+        /* 閱讀區塊樣式 */
+        .script-segment {
+            border-left: 1px solid #333;
+            padding-left: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        .script-segment:hover {
+            border-left-color: var(--neon-blue);
+            background: linear-gradient(90deg, rgba(0,243,255,0.01) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .script-text {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .dialogue-box {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 2px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 3px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dialogue-box.highlight {
+            border-left-color: var(--neon-blue);
+            background: rgba(0, 243, 255, 0.03);
+        }
+
+        .dialogue-box.danger {
+            border-left-color: var(--neon-red);
+            background: rgba(255, 0, 85, 0.03);
+        }
+
+        .system-msg {
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            background: rgba(0, 243, 255, 0.05);
+            padding: 0.5rem 1rem;
+            display: block;
+            margin: 1.5rem 0;
+            font-size: 0.9em;
+            width: fit-content;
+        }
+        
+        .nav-item.active {
+            color: var(--neon-blue);
+            border-left: 3px solid var(--neon-blue);
+            padding-left: 0.75rem;
+            background: linear-gradient(90deg, rgba(0,243,255,0.1) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #333, transparent);
+            margin: 4rem 0;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-900 selection:text-cyan-100">
+
+    <div class="scanlines"></div>
+
+    <!-- Layout Container -->
+    <div class="flex flex-col md:flex-row h-screen overflow-hidden">
+
+        <!-- Sidebar Navigation -->
+        <nav class="w-full md:w-64 bg-neutral-900 border-r border-neutral-800 flex flex-col shrink-0 z-40">
+            <div class="p-6 border-b border-neutral-800">
+                <h1 class="text-xl font-bold tracking-wider text-white font-mono glow-text">ETERNAL<br><span class="text-sm opacity-70">HOLLOW ECHOES</span></h1>
+                <div class="mt-2 text-xs text-neutral-500 font-mono">SYS.VER.4.2.7 // FULL_TEXT</div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto py-4 space-y-1" id="nav-container">
+                <a href="#intro" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">檔案首頁</a>
+                <a href="#chars" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">角色誌</a>
+                <a href="#prologue" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">序幕：孤島</a>
+                <a href="#act1" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">第一幕：藏身處</a>
+                <a href="#act2" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">第二幕：檢查站</a>
+                <a href="#act3" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">第三幕：中央大廳</a>
+                <a href="#act4" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">第四幕：潛入禁區</a>
+                <a href="#act5" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">第五幕：逃亡</a>
+                <a href="#epilogue" class="nav-item block px-6 py-2 text-sm text-neutral-400 hover:text-white transition-colors border-l-2 border-transparent hover:border-neutral-600">尾聲：清掃</a>
+            </div>
+
+            <div class="p-4 border-t border-neutral-800 text-xs text-neutral-600 font-mono">
+                 <div class="flex justify-between mb-1">
+                    <span>MEMORY</span>
+                    <span>98%</span>
+                </div>
+                <div class="w-full bg-neutral-800 h-1 rounded overflow-hidden">
+                    <div class="bg-red-500 h-full w-full animate-pulse"></div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto relative scroll-smooth bg-black" id="main-content">
+            
+            <div class="max-w-4xl mx-auto px-6 py-12 md:py-20">
+
+                <!-- Header / Intro -->
+                <section id="intro" class="min-h-[60vh] flex flex-col justify-center mb-20 border-b border-neutral-800 pb-20">
+                    <div class="font-mono text-cyan-500 text-sm mb-4 tracking-widest">CLASSIFIED DOCUMENT // UNABRIDGED</div>
+                    <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 glow-text tracking-tight leading-tight">
+                        《永恆號：黑洞迴響》
+                    </h1>
+                    <p class="text-xl text-neutral-400 max-w-2xl leading-relaxed mb-8 font-light">
+                        深度視覺擴展版劇本<br>
+                        編號：USS-TITAN-ARCHIVE-001 (完整版)
+                    </p>
+                    <div class="text-xs text-neutral-600 font-mono">
+                        WARNING: FILE SIZE LARGE. CONTAINS FULL NARRATIVE DATA.
+                    </div>
+                </section>
+
+                <!-- Characters -->
+                <section id="chars" class="mb-32">
+                    <h2 class="text-2xl font-bold text-white mb-10 border-l-4 border-cyan-500 pl-4">【角色誌】</h2>
+                    
+                    <div class="grid grid-cols-1 gap-12">
+                        <!-- Li Ang -->
+                        <div class="script-segment">
+                            <h3 class="text-xl text-cyan-400 font-bold mb-4">李昂 (Li Ang)</h3>
+                            <p class="script-text">
+                                三十五歲。臉上有道從左眉劃過眼角延伸到顴骨的舊疤，那是七年前在木衛三任務失敗時留下的。身高一米七八，體型精瘦，肌肉線條明顯但不誇張。右手食指和中指有輕微顫抖的後遺症——長期使用神經加速植入物的代價。眼神冷靜到近乎冷漠，但偶爾會有一種幾乎難以察覺的疲憊感閃過。
+                            </p>
+                            <p class="script-text">
+                                穿著打扮刻意低調：灰黑色合成纖維工裝褲，左側大腿口袋磨損嚴重，右膝蓋處有縫補痕跡。上身是一件無牌的深藍色長袖緊身衣，領口處泛起輕微起球。腳上那雙軍用靴已經穿了三年，鞋底紋路幾乎磨平，但他堅持不換——因為這雙靴子的減震系統經過他親手調校，能在關鍵時刻多爭取零點三秒的反應時間。
+                            </p>
+                        </div>
+
+                        <!-- Karl -->
+                        <div class="script-segment">
+                            <h3 class="text-xl text-red-400 font-bold mb-4">卡爾長官 (Officer Karl)</h3>
+                            <p class="script-text">
+                                五十歲，但看起來像四十出頭。身高一米九五，肩膀寬闊得像一堵移動的牆。灰白的短髮梳得一絲不苟，臉部線條硬朗，下巴有一道小小的凹痕——那是年輕時在訓練場被人用槍托砸的。他的眼睛是少見的琥珀色，瞳孔周圍有一圈淡藍色的光暈——那是軍用視覺增強植入物的副作用。
+                            </p>
+                            <p class="script-text">
+                                他永遠穿著那套深灰色的安全部門制服，肩章上有三道金色槓線。制服熨得筆挺，但仔細看會發現袖口有幾處修補痕跡。腰間掛著一把老式的電磁手槍，槍柄上刻著一串編號：USS-Titan-2367。那是他服役過的前一艘飛船的名字。左手腕上戴著一塊機械錶，表面已經磨出細密的劃痕，但指針走得精準無比。
+                            </p>
+                        </div>
+
+                        <!-- Mark & Tony -->
+                        <div class="script-segment">
+                            <h3 class="text-xl text-purple-400 font-bold mb-4">馬克 (Mark) 與 托尼 (Tony)</h3>
+                            <p class="script-text">
+                                馬克看起來三十五歲左右，實際年齡不詳——他的臉做過三次重建手術。中等身材，但手指異常修長，指甲修剪得很短。他喜歡穿花哨的合成皮夾克，今天這件是紫紅色的，領口鑲著仿金屬流蘇。頭髮染成淺金色，刻意弄成凌亂的樣子。右耳戴著五個環形耳釘，最上面那個實際上是一個微型數據接收器。
+                            </p>
+                            <p class="script-text">
+                                托尼矮一些，大概一米六八，但身材壯實。光頭，頭皮上有一道古怪的刺青——一條從後腦勺延伸到額頭的數字流，近看會發現那些數字在緩慢變化，那是一種活體墨水，會實時顯示永恆號的內部時間。他總是帶著一副淺色墨鏡，即使在昏暗的下層區也不摘下來。穿著一件過大的黑色連帽衫，口袋裡塞滿了各種小型電子設備，走路時會發出輕微的碰撞聲。
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Prologue -->
+                <section id="prologue" class="mb-32">
+                    <div class="flex items-center mb-12">
+                         <span class="font-mono text-4xl mr-4 text-neutral-700">00</span>
+                         <h2 class="text-3xl font-bold text-white">序幕：黑暗中的孤島</h2>
+                    </div>
+                    
+                    <div class="script-segment">
+                        <p class="script-text">鏡頭從純黑開始。</p>
+                        <p class="script-text">不是普通的黑，而是那種能吞噬一切光線的宇宙虛空。偶爾有極其微弱的星光閃過，像溺水者最後的呼吸。</p>
+                        <p class="script-text">然後，遠處出現一個光點。</p>
+                        <p class="script-text">鏡頭緩慢推進。光點逐漸擴大，顯現出輪廓。那是一艘飛船——不，那是一座漂浮在虛空中的城市。</p>
+                        <p class="script-text text-cyan-500 font-bold">永恆號。</p>
+                        <p class="script-text">船身長度超過十二公里，寬度約三公里，整體呈現出一種扭曲的圓柱形，像一根被巨人揉捏變形的金屬雪茄。船體表面佈滿了大大小小的艙窗，此刻有三分之一亮著燈——那是上層和中層居住區。下層的窗戶大多漆黑，偶爾有幾盞昏黃的燈光閃爍，像垂死野獸的眼睛。</p>
+                        <p class="script-text">船尾的推進器噴射出淡藍色的等離子焰流，在黑暗中劃出兩道筆直的光軌。推進器的聲音傳不到真空中,但如果你站在船內,你會聽到那種低沉的、持續的、像心跳一樣的震動聲,那聲音會穿透十二層船殼,滲入你的骨髓。</p>
+                        <p class="script-text">鏡頭繼續推進，掠過船體表面。</p>
+                        <p class="script-text">可以看到船身外殼上的細節了：密密麻麻的金屬鉚釘，某些區域的裝甲板顏色比其他地方深——那是修補過的痕跡。有幾處地方能看到細微的蒸汽洩漏，白色的氣體從焊縫中緩緩溢出，在真空中瞬間凝結成冰晶，然後被推進器的尾焰蒸發。</p>
+                        <p class="script-text">船體中段有一排巨大的全息廣告投影器，此刻正播放著循環廣告：</p>
+                        
+                        <div class="dialogue-box text-center">
+                            <p class="text-cyan-200 italic mb-2">"永恆號，通往新世界的橋樑！"</p>
+                            <p class="text-cyan-200 italic mb-2">"在這裡，每個人都能找到自己的位置！"</p>
+                            <p class="text-cyan-200 italic">"上層生活，只需努力工作二十年！"</p>
+                        </div>
+
+                        <p class="script-text">廣告畫面中是一個典型的聯盟家庭：父親穿著體面的西裝，母親優雅地端著咖啡，兩個孩子在寬敞明亮的客廳裡嬉戲。背景是一扇巨大的落地窗，窗外是璀璨的星空。</p>
+                        <p class="script-text">但鏡頭沒有停留在這幅美好的畫面上。它穿透了船體，進入了船內。</p>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Act 1 -->
+                <section id="act1" class="mb-32">
+                    <div class="flex items-center mb-8">
+                         <span class="font-mono text-4xl mr-4 text-neutral-700">01</span>
+                         <h2 class="text-3xl font-bold text-white">第一幕：下層第三十層——李昂的藏身處</h2>
+                    </div>
+                    
+                    <div class="font-mono text-xs text-neutral-500 mb-8 border-b border-neutral-800 pb-2">
+                        時刻：夜班時段（永恆號內部時間 23:47）<br>
+                        環境溫度：攝氏十八度，濕度 78%<br>
+                        照明狀況：單盞鹵素燈，功率 40 瓦
+                    </div>
+
+                    <div class="script-segment">
+                        <p class="script-text">鏡頭從上方俯瞰。</p>
+                        <p class="script-text">這是一個只有十二平方米的金屬房間。天花板低矮，一個成年男性站直了會碰到頭頂的管道。牆壁是裸露的合金板，上面鏽跡斑斑，某些地方能看到之前住戶留下的塗鴉——有些是文字，有些是簡陋的圖案，還有幾處是用刀尖刻出來的計數痕跡，像是某個人在數著什麼。數著日子？數著希望？還是數著絕望？</p>
+                        <p class="script-text">房間裡沒有窗戶。唯一的通風口是牆角處一個拳頭大小的金屬格柵，此刻正發出輕微的嗡嗡聲，偶爾會噴出一股帶著機油味的熱氣。</p>
+                        <p class="script-text">牆上貼滿了圖紙。不是隨意地貼，而是按照某種邏輯排列：左側牆面是永恆號下層區的平面圖，用不同顏色的筆標註了各個區域的功能、警戒等級、監控死角。中間牆面是電梯系統和通風管道的走向圖，某些路徑被紅筆劃掉，某些被綠筆標記為"可行"。右側牆面是上層區的簡化圖，但細節明顯少得多，好些地方用問號標註。</p>
+                        <p class="script-text">地上堆著幾個金屬箱子，都是從維修部門偷來的制式儲物箱。最大的那個箱子上貼著一張褪色的標籤：維修組-7B-工具套裝。箱子半開著，裡面塞滿了各種設備：捲成一團的光纖線、幾個拆開的通訊器、一疊磁性黏附墊、三把不同型號的螺絲刀。</p>
+                        <p class="script-text">房間中央放著一張折疊式金屬桌，桌面已經磨得發亮。桌上擺著一台老舊的掌上型終端，屏幕邊緣有裂紋，但還能用。終端旁邊是一個馬克杯,裡面的咖啡已經涼了,杯壁上有一圈褐色的咖啡漬。再旁邊是一把多功能匕首,刀身約二十公分,呈現出一種暗沉的金屬灰。刀柄上集成了三個按鈕和一個微型顯示屏,此刻屏幕上顯示著充能進度：87%。</p>
+                        <p class="script-text">李昂坐在唯一的一張椅子上。那是一張從廢棄倉庫撿來的辦公椅,靠背已經斷了一半,但他用鋼絲重新固定過。</p>
+                        <p class="script-text">他正在做最後的檢查。</p>
+                        <p class="script-text">鏡頭切換到李昂的主觀視角。</p>
+                        <p class="script-text">他的視野和普通人不太一樣。視野邊緣有一圈淡藍色的半透明界面，左上角顯示著時間、心率、血壓、體溫等生理數據。右上角是一個小型地圖，顯示著他目前的位置和周圍的房間布局。視野中央有一個十字準星，會自動鎖定他注視的物體，並顯示該物體的基本信息。</p>
+                        <p class="script-text">他的目光落在桌上的裝備上。</p>
+                        <p class="script-text">十字準星鎖定了那件斗篷。斗篷疊放在桌子右側，看起來像一塊普通的深灰色布料，但當李昂的手指觸碰它時，布料表面立刻泛起一陣漣漪般的光學扭曲。那不是真正的隱形，而是一種光學迷彩技術——通過數百萬個微型光學單元捕捉周圍環境的光線信息，然後在斗篷另一側重新投射出來，從而達到視覺上的"透明"效果。</p>
+                        <p class="script-text">斗篷的質地很特別，摸起來像某種介於絲綢和橡膠之間的東西，輕微發涼。李昂把它展開，斗篷完全攤開後大約有兩米長，一米五寬。內側縫著一圈金屬絲，那是供電和數據傳輸線路。斗篷的左肩位置有一個巴掌大小的控制模組，上面有三個按鈕：電源、模式切換、緊急解除。</p>
+                        <p class="script-text">控制模組的小屏幕亮起，顯示：</p>
+                        
+                        <div class="system-msg">
+                            【光學迷彩系統 v2.3】<br>
+                            電池電量：94%<br>
+                            預計持續時間：4 分 37 秒<br>
+                            警告：連續使用超過 5 分鐘可能導致系統過熱
+                        </div>
+
+                        <p class="script-text">李昂皺了皺眉。四分半鐘。比他預期的少了整整一分鐘。他前天才給斗篷換的電池——一個從黑市買來的高容量電池，商家拍著胸脯保證能用八分鐘。</p>
+                        <div class="dialogue-box">
+                            <p>"該死的奸商。"</p>
+                        </div>
+                        <p class="script-text">他低聲咒罵。聲音很輕，但在這個狹小的房間裡聽起來異常清晰。</p>
+                        
+                        <p class="script-text">他放下斗篷，拿起那把多功能匕首。</p>
+                        <p class="script-text">這把刀是他花了六個月時間，從七個不同的黑市商人那裡分別買來零件，然後自己組裝的。刀身是從一個破產的軍火商那裡弄來的合金鋼,混合了鈦和碳纖維,硬度足以劃開永恆號的輕型艙壁。刀刃經過等離子研磨,鋒利到可以切斷光纖線而不會讓線頭毛邊。</p>
+                        <p class="script-text">但這把刀真正的價值不在刀身,而在刀柄。</p>
+                        <p class="script-text">刀柄內部集成了三個功能模組：電磁脈衝發生器、短程無線干擾器、量子加密破譯器。這三個東西湊在一起，能讓他突破永恆號上大部分的電子鎖和低級安全系統。</p>
+                        <p class="script-text">李昂按下刀柄上的第一個按鈕。刀身周圍立刻出現一圈淡藍色的電弧，發出輕微的滋滋聲。他數了三秒，電弧消失。脈衝發生器工作正常。</p>
+                        <p class="script-text">他按下第二個按鈕。刀柄上的微型屏幕顯示出一串波形圖——那是周圍的無線信號。他能看到至少七個不同頻率的信號源：通訊器、監控攝像頭、環境控制系統、相鄰房間的娛樂終端。干擾器正常。</p>
+                        <p class="script-text">他按下第三個按鈕。屏幕切換到加密破譯界面，顯示著一串複雜的算法流程圖。破譯器正常。</p>
+                        <p class="script-text">李昂把刀放回桌上，手指在刀柄上停留了片刻。他的指尖能感受到金屬傳來的輕微震動——那是刀柄內部電容器在持續充能的脈動。這種感覺讓他覺得安心，就像握著一個還在跳動的心臟。</p>
+                        <p class="script-text">他的目光轉向牆上的圖紙。</p>
+                        <p class="script-text font-bold text-white">上層五十層。船長私人檔案室。</p>
+                        <p class="script-text">那個地方在圖紙上只是一個小小的方框，但對李昂來說，那個方框就像一個黑洞，正在吞噬他所有的注意力。</p>
+                        <p class="script-text">他站起來，走到牆邊，手指在圖紙上緩慢移動，再一次確認路線。</p>
+                        <p class="script-text">從下層三十層到中層二十五層，需要經過三道安全檢查站。第一道是自動掃描門，主要檢測危險物品和生物武器，不難騙過。第二道是人工檢查，會有保安目視檢查身份證和通行證，這個比較麻煩，但也不是過不去。第三道是生物識別門，需要視網膜掃描和指紋驗證，這是最大的障礙。</p>
+                        <p class="script-text">然後從中層到上層，需要通過專用電梯。那部電梯只有三個停靠點：中層二十五層、上層四十層、上層五十層。電梯有獨立的AI管理系統，會自動識別乘客身份並決定是否放行。想騙過那個AI，需要一個高權限的身份。</p>
+                        <p class="script-text">李昂的植入芯片可以偽造身份，但只能偽造中低級別的。想要足夠高的權限進入上層，他需要一個船長級別的授權碼——這個東西他沒有，現在也沒時間去弄。</p>
+                        <p class="script-text">所以他需要另一個方法。</p>
+                        <p class="script-text">他的手指在圖紙上移動到中層的一個特殊位置：中央大廳。</p>
+                        <p class="script-text">那裡每晚十點到十一點之間，會有一次"例行身份核查"。所有在中層的人員都需要集合，由安全部門的人逐一檢查身份。這是一個麻煩的程序，但也是一個機會。</p>
+                        <p class="script-text">在那種混亂的場合，很容易混水摸魚。而且，馬克和托尼說他們有辦法幫他弄到一個臨時的高權限通行證——雖然李昂並不完全信任這兩個傢伙，但現在也沒有更好的選擇。</p>
+                        <p class="script-text">他深吸一口氣，走回桌前。</p>
+                        <p class="script-text">桌上還有最後一件裝備：植入芯片。</p>
+                        <p class="script-text">不對，芯片已經在他的頸後了。他現在要做的，是給芯片進行最後一次系統更新和權限擴展。</p>
+                        <p class="script-text">李昂從口袋裡掏出一個火柴盒大小的黑色設備，那是一個便攜式神經接口器。他把接口器按在頸後的芯片植入點上，感覺到一陣輕微的刺痛——那是接口器的探針刺入皮膚，與芯片建立物理連接。</p>
+                        <p class="script-text">他的視野突然一黑。</p>
+                        <p class="script-text">然後，一個半透明的虛擬界面在他視野中展開。那是芯片的管理界面，密密麻麻地顯示著各種參數和選項。</p>
+                        
+                        <div class="system-msg">
+                            【神經植入芯片 NeuralLink X7】<br>
+                            型號：軍用增強型（已破解）<br>
+                            固件版本：4.2.7（非官方）<br>
+                            運行時長：2,847 小時<br>
+                            剩餘壽命：估計 1,200 小時<br>
+                            警告：檢測到未授權的固件修改<br>
+                            警告：檢測到過載使用痕跡
+                        </div>
+
+                        <p class="script-text">李昂忽略那些警告信息——他早就知道芯片被他折騰成什麼樣了。他快速滑動界面,找到"權限管理"選項,點進去。</p>
+                        <p class="script-text">屏幕上顯示著一長串的權限列表：</p>
+                        <p class="script-text font-mono text-sm pl-4">
+                            身份偽造 [已啟用]<br>
+                            生物識別欺騙 [已啟用]<br>
+                            無線信號攔截 [已啟用]<br>
+                            數據加密傳輸 [已啟用]<br>
+                            緊急超頻模式 [已禁用]<br>
+                            神經反射加速 [已禁用]
+                        </p>
+                        <p class="script-text">李昂把最後兩個選項都啟用了。屏幕立刻彈出一個紅色的警告框：</p>
+                        
+                        <div class="system-msg border-red-500 text-red-500 bg-red-900/10">
+                            【警告】<br>
+                            啟用這些功能會大幅縮短芯片壽命<br>
+                            持續使用可能導致不可逆的神經損傷<br>
+                            是否繼續？
+                        </div>
+
+                        <p class="script-text">李昂點了"是"。</p>
+                        <p class="script-text">他感覺到頸後的芯片突然發熱，像有人用燒紅的烙鐵按在他的脖子上。他咬緊牙關，等了大約十秒鐘，熱度才逐漸消退。取而代之的是一種奇特的清醒感——他能感覺到自己的思維速度變快了，視野變得更加清晰，連房間裡那盞昏暗的燈光都變得刺眼起來。</p>
+                        <p class="script-text">這種感覺他很熟悉。這是芯片的超頻模式——它會提升他的反應速度和感知能力，但代價是加速芯片的損耗，以及給大腦帶來額外的負擔。上次他用這個模式，是在三年前的一次任務中。那次任務之後，他整整昏睡了兩天，醒來時發現自己的短期記憶出現了紊亂，有將近六個小時的記憶完全消失了。</p>
+                        <p class="script-text">但現在他顧不了那麼多。</p>
+                        <p class="script-text">他拔掉接口器，揉了揉發熱的頸後。芯片植入點周圍的皮膚泛起淡淡的紅色，摸起來燙得像在發燒。</p>
+                        <p class="script-text">李昂走到房間角落，那裡有一個生鏽的金屬櫃。他打開櫃子，裡面掛著一件洗得發白的維修工服。工服是那種最常見的深灰色，胸口印著永恆號維修部門的標誌——一個齒輪和扳手交叉的圖案，下面有一行小字：維修組-12C。</p>
+                        <p class="script-text">這套工服是他三個月前從一個剛退休的老維修工那裡買來的。老頭當時已經準備搬去上層，迫不及待地想跟下層的一切說再見，所以連這套工服都賤賣了。李昂花了五十信用點——大概相當於一個下層工人半個月的工資——把它買下來。</p>
+                        <p class="script-text">工服上有些油漬洗不掉，領口處的布料已經磨得很薄，但這正好。太新的工服反而可疑。</p>
+                        <p class="script-text">李昂脫掉身上的衣服，換上工服。工服略微有點大，但還可以接受。他在工服口袋裡塞進一些維修工具——螺絲刀、鉗子、電纜測試儀——這些都是偽裝的一部分。</p>
+                        <p class="script-text">然後他拿起那個偽裝成維修工具箱的金屬箱，把斗篷、匕首、還有幾個小型設備都塞進去。箱子關上後看起來平平無奇，和其他維修工背的箱子沒什麼區別。</p>
+                        <p class="script-text">他對著牆上釘著的一小塊金屬板檢查自己的樣子——那塊金屬板經過打磨，勉強能當鏡子用。鏡子裡的他看起來疲憊、普通、毫不起眼。一個典型的下層維修工。完美。</p>
+                        <p class="script-text">李昂最後看了一眼房間。這個地方他住了七個月，但沒有留下任何私人物品。牆上的圖紙他會在離開前全部燒掉。桌上的設備除了帶走的，其他都會扔進廢料回收槽。</p>
+                        <p class="script-text">他不會再回來了。</p>
+                        <p class="script-text">要麼任務成功，他會找個新的藏身處。要麼任務失敗，他會死。就這麼簡單。</p>
+                        <p class="script-text">他走到門口，手放在門把手上，停頓了片刻。</p>
+                        <p class="script-text">然後他拿出一個微型通訊器，那是一個只有指甲蓋大小的黑色裝置，看起來像一顆紐扣。他把通訊器塞進耳朵裡，輕輕按了兩下。通訊器發出一聲極輕的提示音，表示已經激活。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2">李昂對著空氣輕聲說："信號測試。"</p>
+                             <p class="mb-2 text-neutral-400 italic">通訊器裡傳來一陣電流聲，然後是一個機械合成的聲音：</p>
+                             <p class="text-cyan-300">"信號正常。加密頻道已建立。倒計時開始：六小時。"</p>
+                        </div>
+                        <p class="script-text">李昂沒有回應。他只是深吸一口氣，推開了門。</p>
+                    </div>
+                    
+                    <div class="mb-8 mt-12">
+                        <h3 class="text-xl font-bold text-neutral-400 mb-4">【過渡段：下層走廊】</h3>
+                        <p class="script-text">門外是一條狹長的金屬走廊。</p>
+                        <p class="script-text">走廊寬度不到兩米，天花板同樣低矮。牆壁上每隔五米有一盞應急燈，光線昏黃而黯淡。走廊地面是格柵狀的金屬板，踩上去會發出空洞的噹噹聲。透過格柵的縫隙，可以看到下方黑暗的管道層，偶爾有蒸汽從下面冒出來。</p>
+                        <p class="script-text">走廊裡有股難聞的味道——機油、汗水、發霉的空氣，還有一種說不清道不明的金屬鏽蝕味。這種味道在下層無處不在，已經滲進了每一塊金屬板、每一根管道、每一個人的衣服和皮膚。</p>
+                        <p class="script-text">李昂背著工具箱，沿著走廊往前走。</p>
+                        <p class="script-text">他的腳步聲在走廊裡迴盪。噹、噹、噹，有節奏的聲響。每走七八步，他就會經過一扇門。那些門都一模一樣——灰色的金屬門，上面有一個四位數的房間編號，門把手已經被無數人的手摸得發亮。</p>
+                        <p class="script-text">有些門裡傳出聲音。電視的聲音，爭吵的聲音，孩子的哭聲。有一扇門裡傳出低沉的音樂聲，那是某種老式的爵士樂,薩克斯風的聲音低迷而憂傷。</p>
+                        <p class="script-text">李昂經過一個拐角，看到前方有兩個人正在交談。</p>
+                        <p class="script-text">那是兩個維修工，都穿著和他一樣的灰色工服。其中一個是個中年男人，滿臉鬍渣，手裡拿著一瓶廉價的合成酒。另一個年輕些，看起來剛成年，臉上有青春痘的痕跡。</p>
+                        <div class="dialogue-box">
+                            <p class="mb-2">中年人看到李昂，揚了揚手裡的酒瓶：</p>
+                            <p>"嘿，兄弟，要來一口嗎？"</p>
+                        </div>
+                        <p class="script-text">李昂搖搖頭，繼續往前走。中年人也沒多說什麼，轉回去繼續和年輕人聊天。</p>
+                        <p class="script-text text-neutral-400">"...我跟你說，再過五年，我就能攢夠錢搬去中層了。到時候..."</p>
+                        <p class="script-text">聲音逐漸遠去。</p>
+                        <p class="script-text">李昂知道那是謊言。在永恆號上，下層工人想要搬去中層，需要攢夠十萬信用點——而一個普通維修工的月薪只有三百信用點。就算一分錢不花，也需要二十七年。</p>
+                        <p class="script-text">但大部分人攢不到那麼多。因為生活費、醫療費、意外支出，總會把他們的積蓄吞噬殆盡。所以他們只能在下層待一輩子，然後把這個謊言傳給下一代。</p>
+                        <p class="script-text">李昂走過三個拐角、兩個岔路口，最後來到一部電梯前。</p>
+                        <p class="script-text">這不是那種豪華的客用電梯，而是一部貨運電梯——鏽跡斑斑的金屬艙門、裸露的電纜、油膩的控制面板。電梯門上貼著一張褪色的告示：</p>
+                        <div class="system-msg border-yellow-600 text-yellow-500 bg-yellow-900/10">
+                            【維修電梯】<br>
+                            載重上限：500kg<br>
+                            禁止載人（僅限緊急情況）<br>
+                            如遇故障請聯繫維修組-7A
+                        </div>
+                        <p class="script-text">李昂按下上升按鈕。</p>
+                        <p class="script-text">電梯發出一聲沉悶的轟鳴，然後艙門緩慢打開。裡面是一個狹小的空間，大概兩米見方，金屬地板上有很多凹痕和油漬。牆上有一排按鈕，從下層一層到下層三十層。</p>
+                        <p class="script-text">李昂走進電梯，按下"中層轉運站"的按鈕。</p>
+                        <p class="script-text">艙門關閉。電梯開始上升。</p>
+                        <p class="script-text">上升的過程很緩慢，而且不穩定。電梯每升高幾米就會震動一下，發出吱吱嘎嘎的金屬摩擦聲。透過電梯井的縫隙，可以看到外面的管道和電纜從下往上快速滑過。</p>
+                        <p class="script-text">李昂靠在電梯牆上，閉上眼睛，開始調整呼吸。</p>
+                        <p class="script-text">他需要讓心率降下來。芯片的超頻模式會讓他的心跳加快，但在通過安全檢查時，過快的心率會引起懷疑。所以他現在要做的，就是通過控制呼吸，讓身體進入一種相對平靜的狀態。</p>
+                        <p class="script-text">吸氣,四秒。屏息,七秒。呼氣,八秒。</p>
+                        <p class="script-text">這是他在特工訓練時學到的技巧。重複做十次,就能讓心率降低百分之二十。</p>
+                        <p class="script-text">電梯繼續上升。</p>
+                        <p class="script-text">吱嘎——吱嘎——</p>
+                        <p class="script-text">李昂數著自己的呼吸,感覺心跳逐漸平穩。他植入芯片的界面顯示,心率已經從112降到了89。還可以更低,但不能太低,否則反而會顯得異常。</p>
+                        <p class="script-text">電梯停了。</p>
+                        <p class="script-text">艙門打開,外面是一個寬敞的轉運站。這裡是下層和中層之間的緩衝區,一個巨大的倉庫式空間,堆滿了各種貨物箱、設備箱。幾個搬運機器人在自動工作,機械臂發出液壓系統的嘶嘶聲。</p>
+                        <p class="script-text">李昂走出電梯,穿過轉運站。沒有人注意他。在這種地方,維修工是最常見、最不起眼的存在。</p>
+                        <p class="script-text">他走到轉運站的另一端,那裡有一道金屬門。門旁邊有一個掃描器和一個顯示屏。</p>
+                        <p class="script-text">這是第一道安全檢查站。</p>
+                        <p class="script-text">李昂深吸一口氣,走向那道門。</p>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Act 2 -->
+                <section id="act2" class="mb-32">
+                    <div class="flex items-center mb-8">
+                         <span class="font-mono text-4xl mr-4 text-neutral-700">02</span>
+                         <h2 class="text-3xl font-bold text-white">第二幕：中層二十五層——安全檢查站</h2>
+                    </div>
+
+                    <div class="font-mono text-xs text-neutral-500 mb-6 border-b border-neutral-800 pb-2">
+                        時刻：夜班時段（永恆號內部時間 00:23）<br>
+                        環境溫度：攝氏二十一度，濕度 52%<br>
+                        照明狀況：高亮度白熾燈，功率 120 瓦 x 6
+                    </div>
+
+                    <div class="script-segment">
+                        <p class="script-text">鏡頭從李昂的背後拍攝。</p>
+                        <p class="script-text">他站在檢查站入口前,背著工具箱,看起來就像無數次通過這裡的維修工一樣。</p>
+                        <p class="script-text">檢查站是一個長方形的封閉空間,大約十米長,五米寬。入口和出口各有一道厚重的金屬門,都配備了電子鎖和機械鎖的雙重保險。天花板上懸掛著六盞高亮度的燈,把整個空間照得如同白晝。</p>
+                        <p class="script-text">空間中央有一個全身掃描儀——一個巨大的金屬拱門,表面佈滿了感應器和掃描儀探頭。拱門兩側站著四名保安。</p>
+                        <p class="script-text">保安們穿著標準的中層安保制服——深藍色的防護服,胸口有反光條紋,腰間掛著電擊棒和通訊器。他們都戴著半覆蓋式的頭盔,面罩上有實時數據顯示。每個人都持著一把掃描槍——那是一種手持式的生物和危險物質檢測器,長得像加長版的手槍,槍口處有一個環形的掃描發射器。</p>
+                        <p class="script-text">四名保安的站位很講究。兩名站在拱門兩側,面向入口,負責初步檢查。另外兩名站在拱門後方,面向出口,負責最終確認和應急處理。這種交叉覆蓋的站位,能確保檢查站內任何一個角落都在監控範圍內。</p>
+                        <p class="script-text">李昂走近入口門。門旁邊有一個身份驗證器——一個平板大小的觸控屏,上面顯示著一行字：</p>
+                        <div class="system-msg">
+                            【請出示身份證件或進行生物識別驗證】
+                        </div>
+                        <p class="script-text">李昂把手放在驗證器上。</p>
+                        <p class="script-text">他能感覺到頸後的芯片開始工作——一陣輕微的電流感從頸椎向下延伸,像有無數條小蟲子在皮膚下爬動。芯片正在讀取他的生物特徵,然後覆寫成預先準備好的偽造身份。</p>
+                        <p class="script-text">驗證器屏幕閃了閃,顯示：</p>
+                        <div class="system-msg">
+                            【身份驗證中...】<br>
+                            【匹配數據庫...】<br>
+                            【驗證成功】<br>
+                            【歡迎,維修工 理查德·史密斯】<br>
+                            【工號:MT-7C-2847】<br>
+                            【當前權限:下層維修區 + 中層公共區】
+                        </div>
+                        <p class="script-text">入口門發出一聲輕響,緩緩打開。</p>
+                        <p class="script-text">李昂走進檢查站。</p>
+                        <p class="script-text">四名保安的目光立刻集中到他身上。不是那種懷疑的目光,而是職業性的評估——評估這個人是否有威脅,是否需要特別關注。</p>
+                        <p class="script-text">站在左側的保安甲是個高個子,身高超過一米九,肩膀寬闊。他舉起掃描槍,對準李昂,按下觸發鈕。</p>
+                        <p class="script-text">掃描槍發出一陣輕微的嗡嗡聲,槍口的環形發射器亮起藍光,一道道光束從上到下掃過李昂的身體。</p>
+                        <p class="script-text">李昂站在原地,保持放鬆的姿態。他知道掃描槍在檢測什麼——金屬物件、生物武器、爆炸物、違禁藥品。他的工具箱裡有金屬工具,但那些都是合法的維修設備。他的斗篷和匕首藏在箱子底部的夾層裡,外層包裹著一層特殊的屏蔽材料,能欺騙大部分掃描器。</p>
+                        <p class="script-text">掃描槍的屏幕上顯示出李昂的身體輪廓,以及一些標註：</p>
+                        <div class="system-msg">
+                            【檢測到金屬物件:11 個】<br>
+                            【分類:工具類】<br>
+                            【危險等級:低】<br>
+                            【建議:放行】
+                        </div>
+                        <p class="script-text">保安甲看了看屏幕,點了點頭,揮手示意李昂繼續前進。</p>
+                        <p class="script-text">李昂走向全身掃描拱門。</p>
+                        <p class="script-text">這是第二道檢查。拱門掃描器比手持掃描槍精密得多,能檢測更細微的異常。李昂的屏蔽材料能欺騙手持設備,但不一定能欺騙這個大傢伙。</p>
+                        <p class="script-text">他走進拱門。</p>
+                        <p class="script-text">拱門兩側的感應器同時亮起,發出一陣密集的電子嗶嗶聲。李昂能感覺到一種奇特的刺痛感——那是高頻電磁波穿透身體的感覺,就像有無數根極細的針在同時刺穿皮膚,但不會留下傷口。</p>
+                        <p class="script-text">拱門頂部的顯示屏上出現李昂的全身掃描影像——一個藍色的人形輪廓,身上標註著各種數據。</p>
+                        <div class="system-msg">
+                            【生物掃描完成】<br>
+                            【心率:91 bpm】<br>
+                            【體溫:36.8°C】<br>
+                            【植入物檢測:1 個（頸椎 C3-C4）】<br>
+                            【註冊設備:NeuralLink 芯片】<br>
+                            <br>
+                            【危險物掃描完成】<br>
+                            【金屬物件:11 個】<br>
+                            【有機危險物:未檢測到】<br>
+                            【爆炸物:未檢測到】<br>
+                            <br>
+                            【綜合評估:安全】<br>
+                            【建議:放行】
+                        </div>
+                        <p class="script-text">李昂走出拱門。他的後背已經微微出汗,但表情保持平靜。</p>
+                        <div class="dialogue-box">
+                            <p class="mb-2">站在出口處的保安乙——一個中等身材的女性——看了他一眼:</p>
+                            <p>"箱子打開。"</p>
+                        </div>
+                        <p class="script-text">李昂停下腳步,把工具箱放在旁邊的檢查台上,打開箱蓋。</p>
+                        <p class="script-text">箱子裡整齊地擺放著各種維修工具:扳手、螺絲刀、電纜測試儀、焊接工具、一捲電工膠帶、幾個電池組。所有這些東西都是真的,都是正常維修工會攜帶的設備。</p>
+                        <p class="script-text">保安乙用手持掃描器掃了一遍箱子內部。掃描器顯示一切正常。</p>
+                        <p class="script-text">但她皺了皺眉。她的手伸進箱子,在工具下面摸索。</p>
+                        <p class="script-text">李昂的心跳突然加快。芯片界面上的心率數據從91跳到了107。</p>
+                        <p class="script-text">保安乙的手在箱子底部停留了幾秒鐘。她摸到了那個夾層——但那個夾層做得很隱蔽,從外面看只是箱子的正常厚度。除非用工具撬開,否則不會發現。</p>
+                        <p class="script-text">幾秒鐘的沉默。</p>
+                        <p class="script-text">然後保安乙收回手,揮手示意他可以走了。</p>
+                        <p class="script-text">李昂面無表情地合上箱蓋,拿起箱子,走向出口。</p>
+                        <p class="script-text">就在他準備離開時,站在一旁的保安丙突然開口:</p>
+                        <div class="dialogue-box">
+                            <p>"等等。"</p>
+                        </div>
+                        <p class="script-text">李昂停下腳步。他的手指在工具箱的提手上收緊,指節泛白。</p>
+                        <p class="script-text">保安丙走到他面前。這是一個年輕的男性保安,看起來剛工作不久,動作還有些生疏。他舉起掃描槍,對準李昂的臉,仔細掃描。</p>
+                        <p class="script-text">李昂知道他在檢查什麼——面部識別。這個檢查比前面的都危險,因為面部識別系統會對比飛船數據庫裡的所有註冊人員。如果系統發現他的臉和"理查德·史密斯"這個身份不匹配...</p>
+                        <p class="script-text">但李昂的芯片已經預料到這一點。在他通過第一道驗證時,芯片就已經入侵了檢查站的本地數據庫,把"理查德·史密斯"的面部數據臨時替換成了李昂的臉。這種替換只會持續幾分鐘,但足夠他通過檢查。</p>
+                        <p class="script-text">掃描器屏幕顯示:</p>
+                        <div class="system-msg">
+                            【面部識別匹配成功】<br>
+                            【匹配度:98.7%】<br>
+                            【身份確認:理查德·史密斯】
+                        </div>
+                        <p class="script-text">保安丙看了看結果,有些疑惑地皺起眉,但最終還是揮手讓他通過。</p>
+                        <p class="script-text">李昂終於走出了檢查站。</p>
+                        <p class="script-text">出口門在他身後關閉,發出沉悶的鎖閉聲。</p>
+                        <p class="script-text">他深吸一口氣,後背的汗水已經濕透了工服。他的手微微顫抖——那是緊張過後的生理反應,無法控制。</p>
+                        <p class="script-text">但他沒有停下來休息。他繼續往前走,進入了中層區。</p>
+                    </div>
+
+                    <div class="mb-8 mt-12">
+                         <h3 class="text-xl font-bold text-neutral-400 mb-4">【過渡段:中層走廊】</h3>
+                         <p class="script-text">中層和下層完全不同。</p>
+                         <p class="script-text">走廊更寬了,至少有四米寬,天花板也高了許多。地面不再是冰冷的金屬格柵,而是舖著一層淺灰色的合成地毯,踩上去柔軟而寧靜。牆壁塗成了淡藍色,每隔十米有一盞嵌入式的LED燈,光線柔和而均勻。</p>
+                         <p class="script-text">空氣也不一樣了。沒有下層那種機油和汗水混合的異味,取而代之的是一種淡淡的清新劑味道——可能是薄荷,也可能是某種合成香精。溫度也更舒適,大約二十二度,濕度控制得剛剛好。</p>
+                         <p class="script-text">走廊兩側不再是緊密相連的房間,而是每隔二十米才有一扇門。那些門也不一樣——不是灰色的金屬門,而是淺色的複合材料門,門上有電子門鈴和數字門牌。有些門上還掛著小小的裝飾牌,刻著住戶的姓氏。</p>
+                         <p class="script-text">這裡沒有孩子的哭聲,沒有爭吵聲,沒有廉價音樂的噪音。只有偶爾傳來的腳步聲、談話聲,還有遠處某個房間裡傳出的古典音樂——聽起來像莫扎特。</p>
+                         <p class="script-text">李昂沿著走廊快步前進。</p>
+                         <p class="script-text">他現在的目標是前往中央大廳,但在那之前,他需要改變一下裝扮。維修工的身份能讓他進入中層,但進不了中央大廳——那裡正在舉行"例行身份核查",只有中層居民和工作人員才能進入。</p>
+                         <p class="script-text">他需要一套更體面的衣服。</p>
+                         <p class="script-text">李昂拐進一條岔路,走到一扇門前。門上的標牌寫著:【更衣室-B3】。</p>
+                         <p class="script-text">這是中層工作人員的公共更衣室。李昂之前探路時就發現了這個地方——更衣室裡有很多公用的制服和便裝,供中層的服務人員使用。</p>
+                         <p class="script-text">他環顧四周,確認沒有人,然後掏出多功能匕首,把刀尖插進門鎖。他按下刀柄上的按鈕,電磁脈衝發生器啟動,門鎖發出一聲輕響,電子系統被瞬間癱瘓。然後他轉動刀身,機械鎖也被撬開。</p>
+                         <p class="script-text">整個過程不到五秒。</p>
+                         <p class="script-text">李昂推開門,閃身進入更衣室。</p>
+                         <p class="script-text">更衣室不大,大約二十平米,四周是一排排的金屬儲物櫃。中央有幾張長椅,牆上掛著一面大鏡子。空氣裡有一股淡淡的洗衣粉味道。</p>
+                         <p class="script-text">李昂快速搜索儲物櫃。大部分櫃子都上了鎖,但有幾個櫃門虛掩著。他打開第一個櫃子——裡面是一套服務生的制服,白色襯衫和黑色西褲。不合適,太顯眼。</p>
+                         <p class="script-text">第二個櫃子——一套技術員的藍色工作服。也不行。</p>
+                         <p class="script-text">第三個櫃子——一套深灰色的西裝。</p>
+                         <p class="script-text">李昂把西裝拿出來,在鏡子前比了比。西裝略微有點大,但還能穿。他快速脫掉維修工服,換上西裝。</p>
+                         <p class="script-text">西裝的質地還不錯,是那種中層白領會穿的款式——不算奢華,但也體面。西裝內側有個小標籤,寫著尺碼和乾洗標識。李昂把標籤撕掉,塞進口袋。</p>
+                         <p class="script-text">他對著鏡子檢查自己的樣子。</p>
+                         <p class="script-text">灰色西裝,白襯衫,沒打領帶——看起來像一個剛下班的辦公室職員。他把頭髮稍微理了理,用手指梳出一個簡單的發型。然後他從工具箱裡拿出一副平光眼鏡戴上——這是偽裝的一部分,能讓他看起來更像一個文職人員。</p>
+                         <p class="script-text">李昂把脫下來的工服塞進儲物櫃,然後拿起工具箱——等等,工具箱太顯眼了。</p>
+                         <p class="script-text">他環顧更衣室,看到角落裡有一個遺忘的公文包,看起來已經被丟棄了一段時間,上面積了一層薄薄的灰塵。李昂走過去,打開公文包——裡面是空的。</p>
+                         <p class="script-text">完美。</p>
+                         <p class="script-text">他把斗篷、匕首、還有幾個必要的小型設備從工具箱轉移到公文包裡。公文包合上後,看起來就像一個普通的辦公文件包,完全不會引起懷疑。</p>
+                         <p class="script-text">李昂最後看了一眼鏡子。鏡中的他已經完全變了個樣——從一個下層維修工,變成了一個中層白領。</p>
+                         <p class="script-text">他深吸一口氣,拎起公文包,走出更衣室。</p>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Act 3 -->
+                <section id="act3" class="mb-32">
+                    <div class="flex items-center mb-8">
+                         <span class="font-mono text-4xl mr-4 text-neutral-700">03</span>
+                         <h2 class="text-3xl font-bold text-white">第三幕：中央大廳——混亂中的偽裝</h2>
+                    </div>
+
+                    <div class="font-mono text-xs text-neutral-500 mb-6 border-b border-neutral-800 pb-2">
+                        時刻:夜班時段（永恆號內部時間 00:51）<br>
+                        環境溫度:攝氏二十三度,濕度 48%<br>
+                        照明狀況:全息燈光系統,色溫 4500K
+                    </div>
+
+                    <div class="script-segment">
+                        <p class="script-text">鏡頭從大廳入口緩慢推進,逐漸展現出整個空間的宏大。</p>
+                        <p class="script-text">中央大廳是永恆號中層的心臟——一個巨大的圓形空間,直徑超過一百米,高度有五層樓那麼高。天花板是一個巨大的半透明穹頂,此刻正投影著模擬的夜空,星辰閃爍,偶爾有流星劃過。</p>
+                        <p class="script-text">大廳地面是拋光的大理石,白色中帶著淡淡的灰色紋理,燈光照射下泛著柔和的光澤。地面中央有一個巨大的聯盟徽章——一個被群星環繞的地球,周圍環繞著一圈拉丁文:「Per Aspera Ad Astra」（循此苦旅,以抵星辰）。</p>
+                        <p class="script-text">大廳四周是一圈高大的圓柱,每根柱子都有三人合抱那麼粗,表面鑲嵌著金色的裝飾線條。柱子之間是一扇扇落地玻璃窗,此刻窗外一片漆黑——那是真正的太空,但因為沒有光源,所以看起來像一面面黑色的鏡子,映照著大廳內的人群。</p>
+                        <p class="script-text">大廳上方懸掛著十幾個全息投影器,此刻正播放著各種廣告和通知:</p>
+                        <div class="system-msg text-center">
+                            "中層居民注意:本月水電費賬單已發送,請及時繳納..."<br>
+                            "招聘:上層服務部門誠聘禮賓人員,薪資優渥..."<br>
+                            "永恆號即將抵達觀景點,請準備觀賞雙子星雲..."
+                        </div>
+                        <p class="script-text">此刻,大廳裡聚集了至少兩百人。</p>
+                        <p class="script-text">這些人都是中層居民——商人、技術員、辦公職員、服務業管理者。他們的穿著比下層好得多:體面的西裝、連衣裙、商務休閒裝。有些女性還戴著首飾,雖然不算奢華,但也算得體。</p>
+                        <p class="script-text">人群中瀰漫著一種焦躁和不安的氣氛。因為所有人都被突然召集到這裡,沒有人事先得到通知。人們小聲交談著,猜測發生了什麼:</p>
+                        <div class="dialogue-box">
+                            <p>"又是身份檢查？上個月才查過啊..."</p>
+                            <p>"聽說下層有暴動,可能是來排查的..."</p>
+                            <p>"我還有個會議要開,真是浪費時間..."</p>
+                        </div>
+                        <p class="script-text">李昂混在人群中。</p>
+                        <p class="script-text">他刻意站在人群的邊緣位置,既不太靠前,也不太靠後。太靠前會引起注意,太靠後會顯得可疑。他保持著一副略微不耐煩但又不敢明說的表情——這是中層職員的典型表情,既想抱怨,又不敢真的表現出來。</p>
+                        <p class="script-text">他的目光在大廳裡掃視,記錄著每一個細節。</p>
+                        <p class="script-text">大廳正前方有一個升起的平台,那是臨時搭建的檢查台。平台上站著六名安保人員,他們穿著比檢查站保安更高級的制服——深黑色的戰術背心,配備了更多裝備:電擊槍、束縛繩發射器、甚至還有小型盾牌。</p>
+                        <p class="script-text">平台中央站著一個人。</p>
+                        <p class="script-text text-red-500 font-bold">卡爾長官。</p>
+                        <p class="script-text">他身材高大,站在平台上像一座鐵塔。此刻他雙手背在身後,目光緩慢地掃視著下方的人群,那雙琥珀色的眼睛在燈光下閃著冷冽的光。</p>
+                        <p class="script-text">李昂感覺到一陣寒意從脊椎爬上來。</p>
+                        <p class="script-text">他認識卡爾。七年前,在木衛三任務失敗後,李昂曾經和卡爾有過一次短暫的接觸。當時卡爾還只是一個中尉,負責審訊被抓獲的間諜嫌疑人。李昂僥倖逃脫,但他永遠忘不了卡爾的眼神——那種能穿透你所有偽裝的眼神。</p>
+                        <p class="script-text">現在,卡爾是這艘飛船的安全主管。而李昂正站在他的眼皮底下。</p>
+                        <p class="script-text">李昂低下頭,假裝在整理公文包。他的芯片界面顯示,心率已經飆升到118。他強迫自己深呼吸,調整心率。不能慌,不能露出破綻。現在的他是"理查德·史密斯",一個膽小怕事的貿易代表,不是李昂那個前特工。</p>
+                        <p class="script-text">平台上,卡爾開口了。</p>
+                        <p class="script-text">他的聲音低沉而有力,即使不用麥克風也能傳遍整個大廳:</p>
+                        <div class="dialogue-box highlight">
+                            <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"各位,很抱歉打擾你們的休息時間。但根據飛船安全條例第十七條,我們需要進行一次例行身份核查。"</p>
+                        </div>
+                        <p class="script-text">人群中傳出一陣低聲的抱怨。</p>
+                        <p class="script-text">卡爾沒有理會,繼續說:</p>
+                        <div class="dialogue-box highlight">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"核查過程很簡單。你們會依次上前,出示身份證件,進行生物識別掃描。整個過程不超過三十秒。請大家配合。"</p>
+                            <p>他頓了頓,目光變得更加銳利:</p>
+                            <p>"如果有人試圖逃避檢查,或者提供虛假身份,將會被立即拘捕,並移交上層法庭處理。"</p>
+                        </div>
+                        <p class="script-text">大廳陷入短暫的沉默。</p>
+                        <p class="script-text">然後,檢查開始了。</p>
+                        <p class="script-text">人群開始排隊,緩慢地向平台移動。每個人上前,把手放在一個生物識別器上,掃描指紋和視網膜,然後等待系統確認身份。確認通過後,保安會在他們的手腕上蓋一個隱形印章——那是一種熒光墨水,只有在特定光線下才能看到。</p>
+                        <p class="script-text">隊伍緩慢前進。</p>
+                        <p class="script-text">李昂排在大約第五十個位置。他前面是一個中年女性,穿著職業套裝,看起來很緊張,一直在整理頭髮。他後面是一個年輕男子,叼著一根合成煙,一臉不耐煩。</p>
+                        <p class="script-text">李昂的大腦在高速運轉。</p>
+                        <p class="script-text">他在評估風險。他的偽造身份能騙過檢查站的系統,但能騙過卡爾嗎？卡爾不是普通的安保人員,他有豐富的反間諜經驗,他能從細微的表情、動作、生理反應中發現異常。</p>
+                        <p class="script-text">而且,卡爾就站在平台上,親自監督每一次檢查。他會看著每一個通過檢查的人,評估,判斷。</p>
+                        <p class="script-text">李昂需要一個計劃。</p>
+                        <p class="script-text">他的目光在大廳裡搜索,尋找任何可以利用的東西。</p>
+                        <p class="script-text">然後他看到了兩個人。</p>
+                        <p class="script-text font-bold text-purple-400">馬克和托尼。</p>
+                        <p class="script-text">他們站在大廳的另一側,靠近一根柱子。馬克穿著那件紫紅色的皮夾克,在人群中格外顯眼。托尼戴著墨鏡,雙手插在連帽衫口袋裡。</p>
+                        <p class="script-text">兩人正在看著李昂。</p>
+                        <p class="script-text">馬克對他做了個手勢——一個很隱蔽的手勢,只是輕微地揚了揚下巴,然後用眼神示意大廳右側的一個方向。</p>
+                        <p class="script-text">李昂順著他的眼神看去。</p>
+                        <p class="script-text">大廳右側有一個不起眼的側門,那扇門半掩著,門外是一條通往其他區域的走廊。那條走廊連接著服務區和設備間,理論上不應該對普通居民開放,但現在因為檢查的混亂,沒有保安注意到那扇門。</p>
+                        <p class="script-text">李昂明白了馬克的意思。</p>
+                        <p class="script-text">他們想讓他從側門離開,避開這次檢查。但這意味著他必須在不引起注意的情況下,從人群中脫離,走到那扇側門,然後消失。</p>
+                        <p class="script-text">問題是,卡爾就站在平台上,他的視線幾乎能覆蓋整個大廳。任何異常的移動都會被他注意到。</p>
+                        <p class="script-text">隊伍繼續前進。現在李昂前面只剩二十個人了。</p>
+                        <p class="script-text">他必須做出決定。</p>
+                        <p class="script-text">是冒險通過檢查,賭卡爾不會識破他？還是試圖從側門脫身,但可能在移動過程中被發現？</p>
+                        <p class="script-text">李昂權衡著。</p>
+                        <p class="script-text">如果通過檢查,他就能光明正大地留在中層,完成接下來的任務。但風險很大——他不確定自己能騙過卡爾。</p>
+                        <p class="script-text">如果從側門離開,他能避開眼前的危險,但也意味著他不能再用"理查德·史密斯"這個身份了。而且,馬克和托尼為什麼要幫他？他們想要什麼？</p>
+                        <p class="script-text">前面還有十五個人。</p>
+                        <p class="script-text">李昂的手心開始出汗。</p>
+                        <p class="script-text">然後,他做出了決定。</p>
+                        <p class="script-text">他要賭一把。賭卡爾不會記得他。賭他的偽裝足夠完美。</p>
+                        <p class="script-text">因為,如果他現在從側門離開,反而會顯得可疑。一個真正無辜的中層職員,不會在身份檢查時逃跑。</p>
+                        <p class="script-text">前面還有十個人。</p>
+                        <p class="script-text">李昂強迫自己放鬆。他想像自己真的是理查德·史密斯——一個膽小怕事、只想快點完成檢查回家睡覺的貿易代表。他開始在腦海裡構建這個人物的細節:理查德今年三十八歲,在貿易部門工作了十二年,最大的愛好是收集老式電影海報,最害怕的是被上司罵,最大的夢想是攢夠錢搬去上層...</p>
+                        <p class="script-text">前面還有五個人。</p>
+                        <p class="script-text">李昂調整呼吸,讓心率降到95。他的表情放鬆下來,帶著一種疲憊和無奈——這是一個加班到深夜、還要被迫參加檢查的職員應有的表情。</p>
+                        <p class="script-text">前面還有三個人。</p>
+                        <p class="script-text">李昂看到卡爾的目光掃過人群,停留在某些人身上,然後移開。他在評估每一個人。</p>
+                        <p class="script-text">前面還有一個人。</p>
+                        <p class="script-text">那是李昂前面的中年女性。她走上平台,把手放在識別器上,系統掃描,確認通過。保安在她手腕上蓋上印章,揮手讓她離開。</p>
+                        <p class="script-text">現在,輪到李昂了。</p>
+                        <p class="script-text">他深吸一口氣,走上平台。</p>
+                        <p class="script-text">平台上的燈光很亮,刺得他眼睛有些不適。他能感覺到所有人的目光——不,不是所有人,是卡爾的目光。</p>
+                        <p class="script-text">卡爾就站在三米外,雙臂環抱,盯著他。</p>
+                        <p class="script-text">李昂走到識別器前,準備把手放上去。</p>
+                        <div class="dialogue-box danger">
+                            <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"等等。"</p>
+                        </div>
+                        <p class="script-text">卡爾的聲音響起。</p>
+                        <p class="script-text">李昂的心臟重重一跳。</p>
+                        <p class="script-text">芯片界面上的心率數據瞬間從95飆升到127。</p>
+                        <p class="script-text">卡爾向他走來。每一步都沉重而有壓迫感,皮靴踩在平台的金屬地板上,發出篤篤的聲響。</p>
+                        <p class="script-text">李昂強迫自己保持鎮定。他不能逃,不能露出任何緊張的跡象。他現在是理查德,一個無辜的貿易代表,被叫住只會感到疑惑和一點點害怕——而不是恐慌。</p>
+                        <p class="script-text">卡爾站在他面前,俯視著他。這個角度讓卡爾看起來更加高大,像一座鐵塔投下陰影,籠罩著李昂。</p>
+                        <p class="script-text">卡爾的琥珀色眼睛盯著李昂的臉,仔細地掃視著每一個細節。李昂能看到卡爾眼睛周圍那圈淡藍色的光暈——那是視覺增強植入物的特徵,意味著卡爾此刻正在用遠超常人的視力觀察他,捕捉每一個微表情,每一次瞳孔收縮,每一滴汗水。</p>
+                        <p class="script-text">沉默持續了五秒。</p>
+                        <p class="script-text">對李昂來說,這五秒像五個世紀那麼長。</p>
+                        <p class="script-text">然後卡爾開口:</p>
+                        <div class="dialogue-box danger">
+                            <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"你的臉我沒見過。"</p>
+                        </div>
+                        <p class="script-text">聲音低沉,不帶任何情緒,但李昂能聽出其中的懷疑。</p>
+                        <p class="script-text">李昂讓自己看起來有些緊張——但不是被識破的緊張,而是被長官詢問的緊張。他略微低下頭,聲音帶著一絲顫抖:</p>
+                        <div class="dialogue-box">
+                            <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"我...我叫理查德·史密斯,卡爾長官。貿易部門,工號 MT-7C-2847。"</p>
+                        </div>
+                        <p class="script-text">他說話時刻意加入了一些小動作——吞嚥口水、眼神閃躲、手指攥緊公文包的提手。這些都是一個膽小怕事的人在面對權威時會出現的自然反應。</p>
+                        <p class="script-text">卡爾沒有立刻回應。他繼續盯著李昂,然後問:</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"貿易部門？你在這裡做什麼？現在是深夜。"</p>
+                        </div>
+                        <p class="script-text">李昂早就準備好了答案:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"我...我來處理一筆緊急訂單。下層維修組需要一批零件,但供應商出了問題,我需要重新協調..."</p>
+                        </div>
+                        <p class="script-text">他說著,從公文包裡掏出一個數據板——那是他之前準備好的道具,上面顯示著一份看起來很正式的訂單文件。文件是假的,但做得很精緻,有訂單號、時間戳、電子簽名。</p>
+                        <p class="script-text">卡爾接過數據板,掃了一眼。他的表情沒有變化。</p>
+                        <p class="script-text">然後他問了一個讓李昂意外的問題:</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"你的預約記錄呢？中層所有夜間訪客都需要提前預約並登記。"</p>
+                        </div>
+                        <p class="script-text">李昂的腦子飛速運轉。</p>
+                        <p class="script-text">預約記錄。他沒有準備這個。因為他原本打算偷偷潛入中層,而不是光明正大地通過檢查。</p>
+                        <p class="script-text">但現在他不能承認沒有預約記錄,那等於承認自己非法入侵。</p>
+                        <p class="script-text">他需要一個解釋。</p>
+                        <p class="script-text">李昂讓自己看起來更加緊張,甚至帶上一絲慌亂:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"預約...預約記錄應該...應該在系統裡的。是我的上司安排的,他說會提前登記..."</p>
+                        </div>
+                        <p class="script-text">他故意說得結結巴巴,像一個發現自己可能被上司坑了的倒霉職員。這種事在永恆號上很常見——上司忘記或故意不幫下屬辦手續,然後讓下屬背鍋。</p>
+                        <p class="script-text">卡爾盯著他,眼神銳利得像手術刀。</p>
+                        <p class="script-text">李昂知道卡爾在做什麼——他在觀察李昂的生理反應,判斷他是否在說謊。心率、呼吸、微表情、聲音的顫抖,這些都是線索。</p>
+                        <p class="script-text">而李昂的芯片也在工作。芯片正在監測他自己的生理數據,並試圖將這些數據調整到一個"緊張但沒說謊"的範圍內——心率升高,但不是恐慌性的飆升；呼吸加快,但沒有紊亂；瞳孔略微放大,但沒有劇烈變化。</p>
+                        <p class="script-text">他在用芯片欺騙卡爾的植入物。這是一場技術對抗技術的博弈。</p>
+                        <p class="script-text">卡爾舉起他的個人通訊器,對著李昂的臉掃描了一下。通訊器連接到永恆號的中央數據庫,能調取任何人的完整檔案。</p>
+                        <p class="script-text">幾秒鐘後,通訊器屏幕上顯示出"理查德·史密斯"的檔案:</p>
+                        <div class="system-msg">
+                            【姓名:理查德·史密斯】<br>
+                            【年齡:38】<br>
+                            【職位:貿易部門協調員】<br>
+                            【工號:MT-7C-2847】<br>
+                            【居住區:中層 18 層】<br>
+                            【信用等級:B+】<br>
+                            【違規記錄:無】
+                        </div>
+                        <p class="script-text">卡爾看著屏幕,皺起眉頭。</p>
+                        <p class="script-text">李昂的芯片已經提前入侵了數據庫,植入了一份完整的虛假檔案。這份檔案不僅有基本信息,還有工作記錄、薪資流水、甚至社交記錄。一切看起來都是真實的。</p>
+                        <p class="script-text">但卡爾還是不滿意。他繼續問:</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"你說你來處理緊急訂單。訂單內容是什麼？"</p>
+                        </div>
+                        <p class="script-text">李昂不假思索地回答——因為他早就準備好了每一個可能被問到的細節:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"A-7 型電磁閥,數量 50 個,還有 K-12 規格的密封圈,數量 200 個。這些是下層三區的水循環系統維修用的..."</p>
+                        </div>
+                        <p class="script-text">他說得流利而自然,沒有任何停頓。這些型號都是真實存在的零件型號,他花了一整天時間背下來。</p>
+                        <p class="script-text">卡爾沒有說話。他把數據板還給李昂,但眼神依然充滿懷疑。</p>
+                        <p class="script-text">就在李昂以為終於要過關時,卡爾突然伸手,抓住了李昂的下巴。</p>
+                        <p class="script-text">這個動作粗暴而突然,李昂完全沒有預料到。卡爾的手很大,力氣也大,幾乎捏得李昂的下巴發疼。</p>
+                        <p class="script-text">卡爾把李昂的臉扳向燈光,仔細地觀察他的眼睛。</p>
+                        <p class="script-text">他在找什麼？植入物的痕跡？還是某些他認識的特徵？</p>
+                        <p class="script-text">李昂的心跳此刻已經飆升到 142。芯片不斷發出警告,提示他生理數據異常,需要立即採取措施降低心率。但他沒辦法,他只能僵硬地站在那裡,任由卡爾檢查。</p>
+                        <p class="script-text">十秒。</p>
+                        <p class="script-text">二十秒。</p>
+                        <p class="script-text">卡爾終於鬆開手。</p>
+                        <p class="script-text">他退後一步,表情依然嚴肅,但語氣稍微緩和了一些:</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"下次記得提前預約。如果再讓我發現你沒有正規手續就進入中層,我會直接把你關進拘留室。"</p>
+                        </div>
+                        <p class="script-text">李昂連忙點頭:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"是,是的,長官。我會注意的。"</p>
+                        </div>
+                        <p class="script-text">卡爾揮手示意保安讓他通過檢查。</p>
+                        <p class="script-text">李昂走到識別器前,把手放上去。掃描儀讀取了他的指紋和視網膜數據,系統確認身份通過。保安在他手腕上蓋了一個隱形印章。</p>
+                        <p class="script-text">"可以走了。"保安說。</p>
+                        <p class="script-text">李昂拿起公文包,快步走下平台,混入人群。</p>
+                        <p class="script-text">他的腿有些發軟,背後的汗水已經把襯衫濕透。但他不敢停下來,不敢表現出任何異常。他只是像其他通過檢查的人一樣,徑直走向大廳出口。</p>
+                        <p class="script-text">在走向出口的路上,李昂餘光看到馬克和托尼。</p>
+                        <p class="script-text">馬克對他豎起大拇指,臉上帶著那種看好戲的笑容。托尼則推了推墨鏡,沒什麼表情。</p>
+                        <p class="script-text">李昂沒有理會他們,繼續往前走。</p>
+                        <p class="script-text">他穿過大廳,經過那些巨大的圓柱和落地窗,走向通往其他區域的走廊。</p>
+                        <p class="script-text">在即將離開大廳時,李昂忍不住回頭看了一眼。</p>
+                        <p class="script-text">卡爾還站在平台上,但此刻他的目光正盯著李昂離開的方向。</p>
+                        <p class="script-text">兩人的目光在空中短暫地交匯。</p>
+                        <p class="script-text">然後李昂轉過身,消失在走廊裡。</p>
+                    </div>
+
+                    <div class="mb-8 mt-12">
+                        <h3 class="text-xl font-bold text-neutral-400 mb-4">【過渡段:協商與結盟】</h3>
+                        <p class="script-text">李昂走進一條偏僻的走廊。</p>
+                        <p class="script-text">這條走廊比主幹道要窄,也更昏暗。牆壁是裸露的金屬板,天花板的燈有一半不亮,整個走廊籠罩在一種昏黃的半明半暗中。</p>
+                        <p class="script-text">李昂靠在牆上,大口喘著氣。</p>
+                        <p class="script-text">他的手在顫抖。不是因為害怕,而是因為腎上腺素在消退後的生理反應。剛才那幾分鐘,他的身體一直處於極度緊張的狀態,現在緊張過去,身體開始出現疲憊感。</p>
+                        <p class="script-text">他的芯片界面顯示:</p>
+                        <div class="system-msg">
+                            【心率:118 bpm】<br>
+                            【體溫:37.2°C】<br>
+                            【腎上腺素水平:高】<br>
+                            【建議:休息 10 分鐘】
+                        </div>
+                        <p class="script-text">但李昂沒有十分鐘的時間。</p>
+                        <p class="script-text">他聽到身後傳來腳步聲。</p>
+                        <p class="script-text">李昂迅速轉身,手伸向公文包——如果是追兵,他會毫不猶豫地拔出匕首。</p>
+                        <p class="script-text">但出現的人是馬克和托尼。</p>
+                        <p class="script-text">馬克走在前面,臉上帶著那種欠揍的笑容。托尼跟在後面,雙手插在連帽衫口袋裡,墨鏡在昏暗的光線下顯得格外詭異。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"兄弟,我得說,你剛才的表演太精彩了。我差點以為你真的是那個什麼理查德。"</p>
+                        </div>
+                        <p class="script-text">李昂沒有笑。他盯著馬克,聲音冰冷:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"你們怎麼會在這裡？"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"我們一直在觀察你。從你進入檢查站開始。說實話,我們還真擔心你過不了卡爾那關。"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">托尼：</p>
+                            <p>"卡爾這個老狐狸可不好騙。不過你做得不錯,至少他沒當場抓你。"</p>
+                        </div>
+                        <p class="script-text">李昂的警覺性提高到最大。這兩個人知道得太多了——他們知道他在執行任務,知道他的路線,甚至知道他的目標可能是什麼。</p>
+                        <p class="script-text">這不是巧合。</p>
+                        <p class="script-text">李昂的手慢慢移向公文包:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"你們到底想要什麼？"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"直說了吧。我們知道你要去上層。我們也知道你要去船長的私人檔案室。"</p>
+                        </div>
+                        <p class="script-text">李昂的心一沉。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"別緊張,我們不是來抓你的。相反,我們要幫你。"</p>
+                        </div>
+                        <p class="script-text">"為什麼？"李昂問。他不相信天上會掉餡餅。</p>
+                        <p class="script-text">托尼從口袋裡掏出一個微型平板,在李昂面前晃了晃。平板屏幕上顯示著一份文件——看起來是某種財務記錄,密密麻麻的數字和交易明細。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">托尼：</p>
+                            <p>"這是上層保安頭子維克托的貪污證據。他挪用了安保部門的經費,買了三套上層公寓,還給他那個不要臉的情婦買了一艘私人小艇。"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"這份證據可以毀了維克托。而維克托正好是卡爾的副手,負責上層五十層的安全防護。如果我們把這份證據交給船長辦公室的紀檢部門..."</p>
+                        </div>
+                        <p class="script-text">他沒有說完,但意思很明顯——維克托會被調查,上層五十層的安保會出現混亂,李昂就有機會潛入。</p>
+                        <p class="script-text">李昂明白了:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"你們要用這個當敲門磚,換取我盜取的數據。"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"聰明。我們要一份數據備份。你拿走原件,我們拿走複製品。兩不相欠。"</p>
+                        </div>
+                        <p class="script-text">李昂沉默了幾秒鐘,權衡利弊。</p>
+                        <p class="script-text">他不信任這兩個情報販子,但他也清楚,想要突破上層五十層的防禦,他需要幫助。而馬克和托尼手裡這份維克托的貪污證據,確實是一張有用的牌。</p>
+                        <p class="script-text">但同時,李昂也在思考——如果他們知道這麼多,會不會是某個更大勢力的棋子？他們背後是誰？</p>
+                        <p class="script-text">不過現在不是深究的時候。他需要先完成任務。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"可以。但我有個條件——在我拿到數據之前,你們不許動那份證據。如果你們提前曝光維克托,會驚動整個上層,我的任務就泡湯了。"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"沒問題。我們也不想打草驚蛇。"</p>
+                        </div>
+                        <p class="script-text">托尼遞給李昂一個小小的通訊器,和李昂耳朵裡那個差不多大:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">托尼：</p>
+                            <p>"這個給你。如果遇到麻煩,呼叫我們。我們在中層有些...資源,可以幫你製造混亂或提供情報。"</p>
+                        </div>
+                        <p class="script-text">李昂接過通訊器,仔細檢查了一遍——沒有竊聽裝置或追蹤器。他把通訊器塞進口袋。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"合作愉快,兄弟。對了,還有件事要提醒你——上層的電梯系統有兩套運行模式。正常模式需要高權限身份驗證,但維護模式不需要。你可以在電梯控制面板上輸入維護代碼,把電梯切換到維護模式。"</p>
+                            <p>他在李昂的手掌上寫了一串數字:</p>
+                            <p class="text-white bg-purple-900/50 inline-block px-1">"7-4-9-2-Alpha-6。記住了嗎？"</p>
+                        </div>
+                        <p class="script-text">李昂點頭,把數字記在腦子裡,然後用手在褲子上擦了擦,抹掉手掌上的痕跡。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"那麼,我們就在這裡分開。祝你好運,兄弟。記得別死在上面,不然我們就拿不到數據了。"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">托尼：</p>
+                            <p>"還有,小心卡爾。他剛才雖然放你走了,但他肯定還在懷疑你。他可能會派人跟蹤你。"</p>
+                        </div>
+                        <p class="script-text">說完,兩人轉身,消失在走廊的黑暗中。</p>
+                        <p class="script-text">李昂獨自站在原地,心裡既有一絲如釋重負,又有一絲不安。</p>
+                        <p class="script-text">這兩個傢伙太可疑了。他們知道得太多,準備得太充分,就好像早就預料到李昂會出現一樣。</p>
+                        <p class="script-text">但現在沒時間多想了。他需要趕在卡爾真的派人跟蹤之前,前往上層。</p>
+                        <p class="script-text">李昂深吸一口氣,拎起公文包,沿著走廊繼續前進。</p>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Act 4 -->
+                <section id="act4" class="mb-32">
+                    <div class="flex items-center mb-8">
+                         <span class="font-mono text-4xl mr-4 text-neutral-700">04</span>
+                         <h2 class="text-3xl font-bold text-white">第四幕：上層五十層——潛入禁區</h2>
+                    </div>
+
+                    <div class="font-mono text-xs text-neutral-500 mb-6 border-b border-neutral-800 pb-2">
+                        時刻:深夜（永恆號內部時間 01:34）<br>
+                        環境溫度:攝氏二十度,濕度 35%<br>
+                        照明狀況:柔和間接照明,色溫 3000K
+                    </div>
+
+                    <div class="script-segment">
+                        <p class="script-text">鏡頭從電梯外部開始,緩慢推進到電梯門前。</p>
+                        <p class="script-text">這不是普通的電梯。</p>
+                        <p class="script-text">這是通往上層的專用電梯——只有三部,分別連接中層和上層的不同區域。李昂現在站在的,是三號電梯前。</p>
+                        <p class="script-text">電梯門是純黑色的拋光金屬,表面光滑如鏡,能映照出人的完整倒影。門框鑲嵌著一圈淡金色的裝飾線,線條流暢而優雅。門旁邊有一個生物識別面板,此刻屏幕上顯示著一行字:</p>
+                        <div class="system-msg">
+                            【請驗證身份】<br>
+                            【授權等級:上層訪客及以上】
+                        </div>
+                        <p class="script-text">李昂環顧四周。</p>
+                        <p class="script-text">這是中層二十五層的電梯大廳——一個寬敞的圓形空間,地面是白色大理石,天花板掛著一盞巨大的水晶燈。燈光柔和,在大理石地面上投下溫暖的光暈。</p>
+                        <p class="script-text">此刻是深夜,電梯大廳裡沒有什麼人。只有兩個穿著上層服裝的中年人正在等另一部電梯,他們在低聲交談,偶爾發出輕笑。</p>
+                        <p class="script-text">李昂裝作在整理公文包,實際上在觀察周圍。</p>
+                        <p class="script-text">電梯大廳的角落裡有四個監控攝像頭,呈對角分布,幾乎沒有死角。李昂需要在不引起攝像頭注意的情況下,進入電梯。</p>
+                        <p class="script-text">但現在還有個更大的問題——他沒有上層訪客的權限。即使他用芯片偽造身份,也過不了這個生物識別系統。因為這個系統不僅檢查身份信息,還會檢查權限等級。而上層訪客的權限等級是由船長辦公室親自審核發放的,無法偽造。</p>
+                        <p class="script-text">所以李昂需要用馬克提供的維護代碼。</p>
+                        <p class="script-text">他走到電梯門前,假裝在等電梯。然後趁周圍沒人注意時,他迅速把手指伸進生物識別面板下方的一個小縫隙——那裡有一個隱藏的維護面板。</p>
+                        <p class="script-text">他用指甲扣住維護面板的邊緣,輕輕一撬,面板彈開。</p>
+                        <p class="script-text">裡面是一個小小的數字鍵盤,只有九個按鍵,排列成 3x3 的格子。鍵盤上方有一個小屏幕,此刻顯示著:</p>
+                        <div class="system-msg">
+                            【維護模式(未啟用)】<br>
+                            【請輸入授權碼】
+                        </div>
+                        <p class="script-text">李昂快速輸入馬克給他的代碼:</p>
+                        <p class="script-text font-mono">7-4-9-2-Alpha-6</p>
+                        <p class="script-text">Alpha 鍵在鍵盤的左下角,標註著一個希臘字母 α。</p>
+                        <p class="script-text">李昂輸完最後一個數字,按下確認鍵。</p>
+                        <p class="script-text">屏幕閃了閃:</p>
+                        <div class="system-msg">
+                            【授權碼驗證中...】
+                        </div>
+                        <p class="script-text">兩秒鐘的等待,對李昂來說像兩個世紀。</p>
+                        <p class="script-text">然後:</p>
+                        <div class="system-msg">
+                            【授權碼正確】<br>
+                            【維護模式已啟用】<br>
+                            【電梯控制權限:完全開放】
+                        </div>
+                        <p class="script-text">電梯門發出一聲輕微的嗶聲,緩緩打開。</p>
+                        <p class="script-text">李昂鬆了口氣。他迅速把維護面板合上,走進電梯。</p>
+                        <p class="script-text">電梯內部和外部一樣奢華。</p>
+                        <p class="script-text">牆壁是深色的木紋面板,散發著淡淡的木質香氣。地面是柔軟的深藍色地毯,踩上去幾乎沒有聲音。天花板鑲嵌著一圈間接照明,光線溫暖而柔和。電梯後壁是一面巨大的鏡子,鏡子下方有一張小巧的軟墊長椅。</p>
+                        <p class="script-text">電梯左側是控制面板。</p>
+                        <p class="script-text">不同於普通電梯的按鈕式面板,這個面板是觸控屏,上面顯示著一個豎向的樓層選擇列表:</p>
+                        <div class="system-msg">
+                            【中層 25 層】(當前位置)<br>
+                            【上層 40 層】<br>
+                            【上層 50 層】<br>
+                            【上層 55 層】(船長專用,需特殊授權)
+                        </div>
+                        <p class="script-text">李昂伸手,點擊【上層 50 層】。</p>
+                        <p class="script-text">觸控屏閃了閃,但沒有反應。</p>
+                        <p class="script-text">然後屏幕上彈出一個提示框:</p>
+                        <div class="system-msg border-red-500 text-red-500 bg-red-900/10">
+                            【警告:該樓層需身份驗證】<br>
+                            【請進行生物識別或輸入授權碼】
+                        </div>
+                        <p class="script-text">李昂皺眉。</p>
+                        <p class="script-text">維護模式只是繞過了電梯的召喚限制,但要前往上層五十層,還是需要額外的授權。</p>
+                        <p class="script-text">他需要另一個方法。</p>
+                        <p class="script-text">李昂的目光掃過控制面板,注意到屏幕左上角有一個小小的圖標——一個齒輪符號,旁邊寫著"系統設置"。</p>
+                        <p class="script-text">他點擊那個圖標。</p>
+                        <p class="script-text">屏幕切換,顯示出一個複雜的系統菜單:</p>
+                        <div class="system-msg">
+                            【電梯系統設置】<br>
+                            - 運行模式:維護模式<br>
+                            - 速度調節<br>
+                            - 樓層限制<br>
+                            - 緊急停止<br>
+                            - 權限管理<br>
+                            - 日誌記錄
+                        </div>
+                        <p class="script-text">李昂選擇【權限管理】。</p>
+                        <p class="script-text">屏幕上顯示出當前的權限設置:</p>
+                        <div class="system-msg">
+                            【當前權限:維護人員】<br>
+                            【可訪問樓層:中層 25 層,上層 40 層】<br>
+                            【受限樓層:上層 50 層,上層 55 層】
+                        </div>
+                        <p class="script-text">李昂點擊【受限樓層】,試圖解除限制。</p>
+                        <p class="script-text">但屏幕彈出一個密碼輸入框:</p>
+                        <div class="system-msg border-red-500 text-red-500 bg-red-900/10">
+                            【需要管理員密碼】
+                        </div>
+                        <p class="script-text">該死。</p>
+                        <p class="script-text">李昂的芯片開始工作。</p>
+                        <p class="script-text">他把手指按在觸控屏上,芯片通過他的指尖與電梯系統建立了一個微弱的數據連接。然後芯片開始嘗試破解密碼——這是一個暴力破解的過程,芯片會嘗試所有可能的密碼組合,直到找到正確的那個。</p>
+                        <p class="script-text">芯片界面顯示:</p>
+                        <div class="system-msg">
+                            【密碼破解中...】<br>
+                            【嘗試次數:127/999999】<br>
+                            【預計時間:4 分 23 秒】
+                        </div>
+                        <p class="script-text">四分鐘太長了。李昂不確定這段時間裡會不會有人來乘電梯。如果電梯門打開,有人看到他在操作系統設置,他的偽裝就徹底暴露了。</p>
+                        <p class="script-text">但他沒有別的選擇。</p>
+                        <p class="script-text">李昂按下電梯的【關門】按鈕,然後按下【暫停】鍵。電梯停止響應外部召喚,門緊緊關閉。</p>
+                        <p class="script-text">他靠在電梯牆上,盯著屏幕上飛速跳動的數字。</p>
+                        <p class="script-text font-mono text-sm">
+                            1,247/999999<br>
+                            2,589/999999<br>
+                            5,031/999999
+                        </p>
+                        <p class="script-text">破解速度在加快。芯片正在學習密碼的規律,優化破解算法。</p>
+                        <p class="script-text">李昂的心跳和屏幕上的數字同步加速。</p>
+                        <p class="script-text font-mono text-sm">
+                            30,124/999999<br>
+                            45,893/999999
+                        </p>
+                        <p class="script-text">兩分鐘過去了。</p>
+                        <p class="script-text">就在這時,電梯外傳來一個聲音:</p>
+                        <div class="dialogue-box">
+                            <p>"怎麼回事？電梯怎麼不動了？"</p>
+                        </div>
+                        <p class="script-text">有人在外面按電梯按鈕,但電梯沒有響應。</p>
+                        <div class="dialogue-box">
+                            <p>"可能壞了吧。去坐二號電梯。"另一個聲音說。</p>
+                        </div>
+                        <p class="script-text">腳步聲逐漸遠去。</p>
+                        <p class="script-text">李昂鬆了口氣,繼續盯著屏幕。</p>
+                        <p class="script-text font-mono text-sm">
+                            89,456/999999<br>
+                            125,789/999999
+                        </p>
+                        <p class="script-text">三分鐘。</p>
+                        <p class="script-text font-mono text-sm">199,023/999999</p>
+                        <p class="script-text">然後——</p>
+                        <div class="system-msg">
+                            【密碼破解成功】<br>
+                            【管理員密碼:AE-2387-Omega】
+                        </div>
+                        <p class="script-text">屏幕自動跳轉回權限管理界面。李昂迅速解除了上層五十層的訪問限制。</p>
+                        <div class="system-msg">
+                            【受限樓層:無】<br>
+                            【可訪問樓層:全部】
+                        </div>
+                        <p class="script-text">完成。</p>
+                        <p class="script-text">李昂退出系統設置,回到樓層選擇界面,再次點擊【上層 50 層】。</p>
+                        <p class="script-text">這次,沒有彈出警告。</p>
+                        <p class="script-text">屏幕顯示:</p>
+                        <div class="system-msg">
+                            【目標樓層:上層 50 層】<br>
+                            【預計到達時間:90 秒】<br>
+                            【祝您旅途愉快】
+                        </div>
+                        <p class="script-text">電梯開始上升。</p>
+                        <p class="script-text">上升的感覺和下層的那部貨運電梯完全不同。這部電梯非常平穩,幾乎感覺不到移動,只有耳朵里輕微的氣壓變化提醒李昂他正在快速上升。</p>
+                        <p class="script-text">電梯內部播放著輕柔的古典音樂——聽起來像巴赫的《哥德堡變奏曲》。音樂聲很低,但音質極好,每一個音符都清晰可辨。</p>
+                        <p class="script-text">李昂利用這九十秒的時間,做最後的準備。</p>
+                        <p class="script-text">他從公文包裡拿出隱形斗篷,披在身上。斗篷的控制模組顯示電量還有 94%,足夠使用四分半鐘。</p>
+                        <p class="script-text">他拿出多功能匕首,檢查各個功能模組是否正常。一切正常。</p>
+                        <p class="script-text">他深吸一口氣,調整呼吸,讓心率降到 85。</p>
+                        <p class="script-text">電梯在繼續上升。</p>
+                        <p class="script-text">透過電梯井的透明觀察窗,李昂能看到外面的景象在快速變化——從中層那些緊密排列的房間,逐漸過渡到更寬敞、更奢華的上層區域。</p>
+                        <p class="script-text">六十秒。</p>
+                        <p class="script-text">李昂閉上眼睛,在腦海裡再次回顧任務路線:</p>
+                        <p class="script-text font-mono text-sm pl-4 border-l-2 border-cyan-800">
+                            電梯抵達上層五十層 → 從電梯大廳前往西側走廊 → 避開巡邏保安 → 進入通風管道系統 → 沿著管道前往船長私人檔案室 → 侵入量子計算機 → 下載數據 → 撤離。
+                        </p>
+                        <p class="script-text">每一步他都已經演練過無數次。但計劃是一回事,執行又是另一回事。上層的安保系統比中層嚴密得多,一個失誤就可能觸發警報。</p>
+                        <p class="script-text">四十秒。</p>
+                        <p class="script-text">李昂睜開眼睛,看向電梯鏡子裡的自己。</p>
+                        <p class="script-text">鏡中的他穿著灰色西裝,披著隱形斗篷,手裡握著匕首。表情冷靜,但眼神裡有一絲連他自己都沒注意到的疲憊。</p>
+                        <p class="script-text">他想起七年前的那次任務。木衛三,一個冰封的星球,一座地下研究基地。他的任務是潛入基地,盜取某個機密資料。但任務失敗了,他的搭檔死了,他自己臉上留下了那道疤。</p>
+                        <p class="script-text">那次之後,他就再也不相信"完美計劃"這種東西了。</p>
+                        <p class="script-text">二十秒。</p>
+                        <p class="script-text">電梯開始減速。</p>
+                        <p class="script-text">李昂能感覺到輕微的失重感——電梯正在接近目標樓層。</p>
+                        <p class="script-text">十秒。</p>
+                        <p class="script-text">他啟動隱形斗篷。</p>
+                        <p class="script-text">斗篷表面的光學單元開始工作,捕捉周圍環境的光線信息,然後在斗篷另一側重新投射。李昂的身影開始變得模糊,透明,最後幾乎完全消失。</p>
+                        <p class="script-text">五秒。</p>
+                        <p class="script-text">電梯停止。</p>
+                        <p class="script-text">一聲輕微的嗶聲。</p>
+                        <p class="script-text">電梯門緩緩打開。</p>
+                    </div>
+
+                    <div class="mb-8 mt-12">
+                        <h3 class="text-xl font-bold text-neutral-400 mb-4">【上層五十層:金碧輝煌下的陰影】</h3>
+                        <p class="script-text">鏡頭從電梯內部向外推進,展現上層五十層的景象。</p>
+                        <p class="script-text">這裡是永恆號的權力中樞。</p>
+                        <p class="script-text">電梯門外是一個巨大的圓形大廳,直徑至少五十米。地面是黑色的拋光大理石,表面映照著天花板的燈光,像一面漆黑的鏡湖。大廳中央有一個巨大的雕塑——一個向上伸展的抽象人形,由無數金屬碎片拼接而成,象徵著人類向星空的探索。雕塑高達十米,頂端幾乎觸及天花板。</p>
+                        <p class="script-text">天花板是一個巨大的全息投影屏,此刻正播放著實時的外部太空景象——永恆號正在穿越一片小行星帶,無數大大小小的岩石在飛船周圍緩緩漂浮,在遠處恆星的照耀下閃爍著微弱的光芒。</p>
+                        <p class="script-text">大廳四周是一圈落地玻璃窗。但這些窗戶不是普通的玻璃,而是全息屏幕,能顯示任何景象——此刻有些窗戶顯示著宇宙深空,有些顯示著模擬的地球景色:藍天、白雲、綠色的森林、波光粼粼的海洋。</p>
+                        <p class="script-text">這些景象是給上層居民看的,讓他們在這個金屬囚籠裡也能感受到"戶外"的錯覺。</p>
+                        <p class="script-text">大廳裡沒有人。</p>
+                        <p class="script-text">但李昂知道這只是表象。他的芯片掃描顯示,大廳裡至少有八個隱藏的監控攝像頭,三個熱感探測器,還有兩個運動感應器。這些設備都是軍用級別的,比中層的安保系統高級得多。</p>
+                        <p class="script-text">李昂披著隱形斗篷,小心翼翼地走出電梯。</p>
+                        <p class="script-text">他的腳步很輕,幾乎沒有聲音。但每走一步,他都能感覺到斗篷在消耗電量——控制模組顯示電量已經降到 91%。</p>
+                        <p class="script-text">他需要找到通風管道的入口。</p>
+                        <p class="script-text">根據他之前研究的飛船結構圖,上層五十層的通風管道入口位於大廳西側,一個維護通道的盡頭。但要到達那裡,他需要穿過整個大廳,然後經過一條長達五十米的走廊。</p>
+                        <p class="script-text">而這段路程中,他會經過至少四個監控死角,但也會暴露在三個攝像頭的視野範圍內。</p>
+                        <p class="script-text">隱形斗篷能欺騙監控攝像頭,但不是百分之百可靠。如果攝像頭使用了熱成像功能,或者AI檢測到畫面中的"異常扭曲",他就會被發現。</p>
+                        <p class="script-text">李昂開始移動。</p>
+                        <p class="script-text">他沿著大廳的邊緣行走,盡量避開中央區域——那裡的監控最密集。他的芯片實時分析著攝像頭的視野範圍,在腦海中繪製出一條最安全的路線。</p>
+                        <p class="script-text">他經過那個巨大的雕塑。雕塑的金屬表面反射著他模糊的輪廓——隱形斗篷無法完全消除反射,只是讓反射變得非常微弱。</p>
+                        <p class="script-text">李昂繼續前進,進入西側的走廊。</p>
+                        <p class="script-text">走廊比大廳更加奢華。</p>
+                        <p class="script-text">牆壁不再是冷冰冰的金屬或合成材料,而是真正的木質面板——深紅色的胡桃木,表面拋光得像鏡子一樣。地面是深色的地毯,厚重而柔軟,踩上去完全沒有聲音。天花板鑲嵌著一排水晶吊燈,燈光溫暖而柔和,在木質牆面上投下金色的光暈。</p>
+                        <p class="script-text">走廊兩側每隔十米有一扇門。那些門都是厚重的實木門,門上鑲嵌著金色的門牌:</p>
+                        <div class="system-msg text-center">
+                            【船長辦公室】<br>
+                            【副船長辦公室】<br>
+                            【安全部門主管辦公室】<br>
+                            【財務總監辦公室】
+                        </div>
+                        <p class="script-text">這些都是永恆號最高層的權力辦公室。</p>
+                        <p class="script-text">李昂快步經過這些門,沒有停留。他的目標不是這些辦公室,而是走廊盡頭的維護通道。</p>
+                        <p class="script-text">他走了大約三十米,前方出現一個岔路口。</p>
+                        <p class="script-text">岔路口右側是通往其他辦公室的走廊,左側是一條更窄的通道,牆上掛著一個標識:【維護通道-僅限授權人員】。</p>
+                        <p class="script-text">李昂轉向左側。</p>
+                        <p class="script-text">維護通道和外面的奢華走廊形成鮮明對比——這裡的牆壁又變回了裸露的金屬板,地面是格柵,天花板掛著裸露的管道和電纜。這才是永恆號的真實面目,外面那些奢華的裝飾只是一層薄薄的偽裝。</p>
+                        <p class="script-text">李昂沿著維護通道前進,很快來到盡頭。</p>
+                        <p class="script-text">盡頭是一面牆,牆上有一個大約一米見方的通風格柵。格柵後面是黑洞洞的管道,隱約能聽到氣流的嘶嘶聲。</p>
+                        <p class="script-text">李昂走到格柵前,拿出多功能匕首。</p>
+                        <p class="script-text">格柵用四顆螺絲固定。李昂用匕首上的螺絲刀功能,快速擰開四顆螺絲,然後取下格柵。</p>
+                        <p class="script-text">格柵後面的通風管道寬度大約八十公分,高度六十公分——剛好夠一個人爬進去。管道內壁是光滑的金屬,此刻正吹著冷風。</p>
+                        <p class="script-text">李昂把公文包推進管道,然後自己鑽了進去。</p>
+                        <p class="script-text">他剛爬進去,就聽到外面傳來腳步聲。</p>
+                        <p class="script-text">有人來了。</p>
+                        <p class="script-text">李昂屏住呼吸,一動不動地趴在管道裡。</p>
+                        <p class="script-text">腳步聲越來越近,然後停在維護通道入口處。</p>
+                        <p class="script-text">透過管道口,李昂能看到外面——兩個穿著安保制服的保安正站在那裡。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-red-400">保安甲：</p>
+                            <p>"這裡怎麼回事？通風格柵怎麼掉了？"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-red-400">保安乙：</p>
+                            <p>"可能是螺絲鬆了吧。這船上到處都在老化,這種事很常見。"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-red-400">保安甲：</p>
+                            <p>"不對,你看這些螺絲,是被擰開的,不是自然脫落。"</p>
+                        </div>
+                        <p class="script-text">他蹲下來,撿起一顆螺絲,仔細檢查。</p>
+                        <p class="script-text">李昂的心跳加速。他的手緩慢地移向匕首——如果保安探頭進來,他會毫不猶豫地動手。</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">保安甲對著通訊器說：</p>
+                            <p>"這裡是西側巡邏組。發現異常,通風格柵被人拆除。請求支援。"</p>
+                        </div>
+                        <p class="script-text text-neutral-400">通訊器裡傳來一個聲音: "收到。保持警戒,支援五分鐘後到達。"</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">保安乙拔出電擊槍,對準管道口：</p>
+                            <p>"裡面有人嗎？出來!"</p>
+                        </div>
+                        <p class="script-text">沉默。</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-red-400">保安乙看了看保安甲：</p>
+                            <p>"要不要進去看看？"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-red-400">保安甲搖頭：</p>
+                            <p>"別傻了。如果裡面真有人,現在肯定已經爬遠了。這些管道四通八達,你進去就是找死。等支援來了,封鎖所有出口。"</p>
+                        </div>
+                        <p class="script-text">兩個保安開始在通道口警戒,等待支援。</p>
+                        <p class="script-text">李昂知道不能再等了。</p>
+                        <p class="script-text">他爬到管道深處,遠離入口。管道裡很黑,只有偶爾從通風口透進來的微弱燈光。李昂啟動芯片的夜視功能,視野立刻變成一片綠色,但能清楚看到前方的路。</p>
+                        <p class="script-text">管道向前延伸了大約十米,然後出現一個岔路——一條向左,一條向上。</p>
+                        <p class="script-text">根據李昂記憶中的飛船結構圖,向左的管道通往其他辦公區,向上的管道通往船長私人檔案室所在的區域。</p>
+                        <p class="script-text">李昂選擇向上。</p>
+                        <p class="script-text">向上的管道是豎直的,內壁有一些凸起的金屬框架,可以當作梯子。李昂把公文包背在背上,開始向上爬。</p>
+                        <p class="script-text">爬升的過程很艱難。管道很窄,李昂的肩膀幾乎擦著管道壁。每爬一米,他都需要停下來休息幾秒,調整姿勢。</p>
+                        <p class="script-text">他爬了大約五米,芯片界面突然彈出一個警告:</p>
+                        <div class="system-msg border-red-500 text-red-500 bg-red-900/10">
+                            【檢測到高頻信號干擾】<br>
+                            【可能有電子反偵查設備】
+                        </div>
+                        <p class="script-text">李昂停下來,仔細聆聽。</p>
+                        <p class="script-text">管道上方傳來一陣極其微弱的嗡嗡聲——那是某種電子設備的工作聲。</p>
+                        <p class="script-text">李昂繼續向上爬,更加小心。</p>
+                        <p class="script-text">又爬了三米,他看到上方有一個通風口。通風口透出微弱的光,能聽到外面傳來的聲音——鍵盤敲擊聲,機器運轉的低鳴聲。</p>
+                        <p class="script-text">李昂爬到通風口前,透過格柵向外看。</p>
+                        <p class="script-text">外面是一個房間。</p>
+                        <p class="script-text">不是很大,大約二十平米。房間中央放著一台巨大的量子計算機——一個大約兩米高的黑色金屬機櫃,表面密布著冷卻管道和數據接口。機櫃前面有一個全息操作台,此刻屏幕上滾動著密密麻麻的代碼。</p>
+                        <p class="script-text">房間四周的牆壁上嵌滿了數據存儲單元——一排排閃爍著藍光的硬盤陣列。天花板掛著四個監控攝像頭,呈對角分布,幾乎沒有死角。</p>
+                        <p class="script-text">房間裡沒有人。</p>
+                        <p class="script-text">這就是船長的私人檔案室。</p>
+                        <p class="script-text">李昂鬆了口氣。他小心翼翼地推開通風格柵——這次他沒有擰螺絲,而是用匕首的電磁脈衝功能,瞬間癱瘓了格柵的警報系統。</p>
+                        <p class="script-text">格柵無聲地打開。</p>
+                        <p class="script-text">李昂從管道裡鑽出來,無聲地落在房間地板上。</p>
+                        <p class="script-text">他的隱形斗篷還在工作,但電量已經降到 73%。他不能再浪費時間了。</p>
+                        <p class="script-text">李昂快速走到量子計算機前,從公文包裡拿出一個微型數據線,一端插進芯片的接口,另一端插進計算機的數據端口。</p>
+                        <p class="script-text">芯片開始工作,入侵計算機的防火牆。</p>
+                        <div class="system-msg">
+                            【入侵中...】<br>
+                            【第一層防火牆:軍用 AES-2048 加密】<br>
+                            【破解難度:極高】<br>
+                            【預計時間:8 分鐘】
+                        </div>
+                        <p class="script-text">八分鐘。李昂不確定自己有沒有八分鐘。</p>
+                        <p class="script-text">他環顧房間,尋找任何可能的威脅。</p>
+                        <p class="script-text">然後他注意到房間角落裡有一個小小的紅色指示燈,正在緩慢閃爍。</p>
+                        <p class="script-text">那是什麼？</p>
+                        <p class="script-text">李昂走過去仔細看。</p>
+                        <p class="script-text">那是一個微型設備,大概只有火柴盒大小,貼在牆角的陰影處。設備表面有一個小小的鏡頭,正對著房間中央。</p>
+                        <p class="script-text">這不是飛船的制式設備。</p>
+                        <p class="script-text">這是一個私人監控器。</p>
+                        <p class="script-text">有人在監視這個房間——不是通過飛船的官方監控系統,而是通過這個隱蔽的私人設備。</p>
+                        <p class="script-text">李昂的心一沉。</p>
+                        <p class="script-text">他想起了在逃離途中,在電梯裝飾板後發現的那個紅點。</p>
+                        <p class="script-text">有人在暗中監視永恆號上的關鍵位置。而這個人,知道所有的秘密。</p>
+                        <p class="script-text">李昂沒有時間多想。他用匕首的脈衝功能,摧毀了那個監控器。監控器發出一聲輕微的爆裂聲,紅燈熄滅。</p>
+                        <p class="script-text">然後李昂回到計算機前,查看入侵進度。</p>
+                        <div class="system-msg">
+                            【第一層防火牆:已突破】<br>
+                            【第二層防火牆:量子加密鎖】<br>
+                            【破解中...】
+                        </div>
+                        <p class="script-text">進度條緩慢前進。</p>
+                        <p class="script-text">李昂能聽到自己的心跳聲,能感覺到額頭上滲出的汗水。</p>
+                        <p class="script-text">時間一分一秒地過去。</p>
+                        <div class="system-msg">
+                            【第二層防火牆:已突破】<br>
+                            【第三層防火牆:生物識別鎖】<br>
+                            【需要授權人員的生物特徵】
+                        </div>
+                        <p class="script-text">該死。</p>
+                        <p class="script-text">李昂沒有船長的生物特徵——指紋、視網膜、DNA。沒有這些,他無法解開最後一層鎖。</p>
+                        <p class="script-text">他必須想辦法繞過這一層。</p>
+                        <p class="script-text">李昂的芯片開始搜索計算機系統的漏洞,尋找任何可以利用的後門或弱點。</p>
+                        <div class="system-msg">
+                            【搜索中...】<br>
+                            【發現潛在漏洞:系統日誌權限提升漏洞】<br>
+                            【利用該漏洞可能繞過生物識別】<br>
+                            【成功率:67%】
+                        </div>
+                        <p class="script-text">李昂沒有選擇。他讓芯片執行漏洞利用程序。</p>
+                        <p class="script-text">屏幕上的代碼開始瘋狂滾動。</p>
+                        <div class="system-msg">
+                            【正在注入代碼...】<br>
+                            【正在提升權限...】<br>
+                            【正在繞過生物識別...】
+                        </div>
+                        <p class="script-text">然後——</p>
+                        <div class="system-msg">
+                            【成功】<br>
+                            【第三層防火牆:已突破】<br>
+                            【獲得完全訪問權限】
+                        </div>
+                        <p class="script-text">李昂鬆了一大口氣。</p>
+                        <p class="script-text">他迅速在計算機上搜索目標文件。</p>
+                        <p class="script-text">文件很容易找到——船長沒有隱藏它,因為他認為沒有人能突破這麼多層防護。</p>
+                        <p class="script-text">文件夾名稱:【Project Black Hole - 黑洞計劃】</p>
+                        <p class="script-text">李昂點開文件夾。</p>
+                        <p class="script-text">裡面有數百份文件——報告、日誌、通訊記錄、航行計劃、乘客名單。</p>
+                        <p class="script-text">李昂沒時間逐一查看。他直接選擇全部下載。</p>
+                        <div class="system-msg">
+                            【下載中...】<br>
+                            【文件大小:47.3 GB】<br>
+                            【預計時間:3 分 12 秒】
+                        </div>
+                        <p class="script-text">下載開始。進度條緩慢前進。</p>
+                        <p class="script-text">李昂站在計算機前,緊張地盯著進度條。</p>
+                        <p class="script-text">1%...5%...12%...</p>
+                        <p class="script-text">就在這時,房間外傳來一陣急促的腳步聲。</p>
+                        <p class="script-text">然後是警報聲。</p>
+                        <p class="script-text">刺耳的警報響徹整個上層。</p>
+                        <div class="system-msg border-red-500 text-red-500 bg-red-900/10">
+                            【警報!檢測到未授權訪問!】<br>
+                            【位置:船長私人檔案室】<br>
+                            【啟動緊急封鎖程序!】
+                        </div>
+                        <p class="script-text">李昂的心一緊。</p>
+                        <p class="script-text">他被發現了。</p>
+                        <p class="script-text">進度條顯示:34%。</p>
+                        <p class="script-text">腳步聲越來越近。</p>
+                        <p class="script-text">李昂能聽到外面傳來的喊聲:</p>
+                        <div class="dialogue-box danger">
+                            <p>"封鎖所有出口!"</p>
+                            <p>"入侵者在檔案室!"</p>
+                            <p>"準備武器!"</p>
+                        </div>
+                        <p class="script-text">進度條:58%。</p>
+                        <p class="script-text">李昂拔出匕首,做好戰鬥準備。</p>
+                        <p class="script-text">房間的門突然被大力撞擊,金屬門發出沉悶的撞擊聲。門鎖開始變形。</p>
+                        <p class="script-text">進度條:79%。</p>
+                        <p class="script-text">又一次撞擊。門鎖斷裂,門被踹開。</p>
+                        <p class="script-text">四個保安衝進來,手持電擊槍和盾牌。</p>
+                        <p class="script-text">他們看到房間中央的計算機,看到還在運行的下載程序,但沒有看到李昂——因為李昂還披著隱形斗篷。</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">領頭的保安喊道：</p>
+                            <p>"入侵者在這裡!打開熱成像!"</p>
+                        </div>
+                        <p class="script-text">保安們的頭盔面罩切換到熱成像模式。</p>
+                        <p class="script-text">李昂知道隱形斗篷擋不住熱成像。他的身形立刻在保安們的視野中顯現出來——一個模糊的紅色人形輪廓。</p>
+                        <div class="dialogue-box danger">
+                            <p>"在那裡!"</p>
+                        </div>
+                        <p class="script-text">保安們舉起電擊槍。</p>
+                        <p class="script-text">李昂沒有等他們開槍。他按下匕首的脈衝按鈕,匕首周圍爆發出一圈強烈的電磁脈衝。</p>
+                        <p class="script-text">脈衝瞬間擴散,籠罩整個房間。</p>
+                        <p class="script-text">保安們的電子設備全部失效——電擊槍熄火,頭盔面罩黑屏,通訊器發出刺耳的雜音。</p>
+                        <p class="script-text">進度條:94%。</p>
+                        <p class="script-text">李昂趁著保安們混亂的幾秒鐘,衝向最近的一個保安。</p>
+                        <p class="script-text">他用匕首劃過保安的大腿外側——不是致命的傷口,但足以讓保安失去行動能力。保安慘叫一聲,倒地。</p>
+                        <p class="script-text">第二個保安反應過來,揮舞盾牌砸向李昂。</p>
+                        <p class="script-text">李昂側身閃避,然後用膝蓋頂向保安的腹部。保安悶哼一聲,彎下腰。李昂用匕首柄敲擊保安的後頸,保安昏厥過去。</p>
+                        <p class="script-text">進度條:98%。</p>
+                        <p class="script-text">剩下兩個保安放棄了失靈的武器,拔出警棍,從兩側包抄李昂。</p>
+                        <p class="script-text">李昂沒有硬拼。他向後退,退到計算機旁邊。</p>
+                        <p class="script-text">進度條:100%。</p>
+                        <div class="system-msg text-green-400 border-green-500 bg-green-900/10">
+                            【下載完成】
+                        </div>
+                        <p class="script-text">李昂迅速拔出數據線,塞進公文包。</p>
+                        <p class="script-text">然後他按下匕首上的最後一個按鈕——緊急模式。</p>
+                        <p class="script-text">匕首刀身突然發出刺眼的白光,同時發出尖銳的超聲波。</p>
+                        <p class="script-text">保安們本能地閉上眼睛,捂住耳朵。</p>
+                        <p class="script-text">李昂趁機衝向通風口。</p>
+                        <p class="script-text">他縱身一躍,抓住通風口的邊緣,把自己拉進管道。</p>
+                        <p class="script-text">身後傳來保安的喊聲:</p>
+                        <div class="dialogue-box danger">
+                            <p>"他逃進管道了!"</p>
+                            <p>"呼叫支援!封鎖所有通風口!"</p>
+                        </div>
+                        <p class="script-text">李昂沒有回頭。他在狹窄的管道裡快速爬行,朝著來時的方向返回。</p>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Act 5 -->
+                <section id="act5" class="mb-32">
+                    <div class="flex items-center mb-8">
+                         <span class="font-mono text-4xl mr-4 text-neutral-700">05</span>
+                         <h2 class="text-3xl font-bold text-white">第五幕：逃亡與真相</h2>
+                    </div>
+
+                    <div class="font-mono text-xs text-neutral-500 mb-6 border-b border-neutral-800 pb-2">
+                        時刻:深夜（永恆號內部時間 02:17）<br>
+                        狀況:緊急警報,全船戒嚴
+                    </div>
+
+                    <div class="script-segment">
+                        <p class="script-text">李昂在通風管道裡拼命爬行。</p>
+                        <p class="script-text">管道裡迴盪著警報聲,從各個通風口傳來。整個上層都被警報驚醒了。</p>
+                        <p class="script-text">李昂的芯片界面顯示:</p>
+                        <div class="system-msg">
+                            【心率:156 bpm】<br>
+                            【體溫:38.1°C】<br>
+                            【腎上腺素水平:極高】<br>
+                            【警告:生理負荷過高,建議立即休息】
+                        </div>
+                        <p class="script-text">但李昂沒時間休息。</p>
+                        <p class="script-text">他能聽到管道外面傳來的聲音——大量保安的腳步聲,對講機的聲音,命令的喊聲。</p>
+                        <div class="dialogue-box danger">
+                            <p>"封鎖所有電梯!"</p>
+                            <p>"檢查每一個通風口!"</p>
+                            <p>"通知卡爾長官!"</p>
+                        </div>
+                        <p class="script-text">李昂繼續爬行,來到一個岔路口。</p>
+                        <p class="script-text">他需要找到回到中層的路線。但現在所有電梯都被封鎖了,他不可能原路返回。</p>
+                        <p class="script-text">他需要另一條路。</p>
+                        <p class="script-text">李昂啟動芯片的地圖功能,調出永恆號的通風系統完整地圖。地圖顯示,有一條管道連接上層和中層,但那條管道位於飛船的東側——距離他現在的位置至少兩百米。</p>
+                        <p class="script-text">兩百米的管道,在正常情況下需要爬行至少十五分鐘。但現在不是正常情況。</p>
+                        <p class="script-text">李昂別無選擇。他朝著東側的方向爬去。</p>
+                        <p class="script-text">管道越來越窄,有些地方李昂需要側身才能通過。他的肩膀、膝蓋不斷撞擊管道壁,傳來陣陣疼痛。</p>
+                        <p class="script-text">隱形斗篷的電量已經耗盡,自動關閉。李昂把斗篷從身上扯下來,塞進公文包。</p>
+                        <p class="script-text">他繼續前進。</p>
+                        <p class="script-text">突然,前方的管道亮起一道強光。</p>
+                        <p class="script-text">李昂停下,看到前方管道口有一個保安正拿著手電筒往裡照。</p>
+                        <div class="dialogue-box danger">
+                            <p>"我看到他了!在東側 C3 管道!"保安對著對講機喊。</p>
+                        </div>
+                        <p class="script-text">李昂迅速後退,拐進一條岔路。</p>
+                        <p class="script-text">但這條岔路很快就到了盡頭——一個死胡同,只有一個向下的豎直管道。</p>
+                        <p class="script-text">李昂沒有猶豫,直接跳進豎直管道。</p>
+                        <p class="script-text">他在黑暗中急速下墜。</p>
+                        <p class="script-text">管道內壁太光滑,李昂無法抓住任何東西。他只能用手腳撐住管道壁,試圖減速,但效果不大。</p>
+                        <p class="script-text">三秒鐘後,李昂重重地摔在管道底部的一個緩衝網上——那是維護人員設置的安全網,防止意外掉落。</p>
+                        <p class="script-text">緩衝網救了他的命,但撞擊力還是讓他感到一陣劇痛。他的左肩膀可能脫臼了,肋骨也可能斷了幾根。</p>
+                        <p class="script-text">李昂咬緊牙關,強迫自己站起來。</p>
+                        <p class="script-text">他檢查公文包——數據存儲器還在,沒有損壞。匕首也還在,但充能已經耗盡。</p>
+                        <p class="script-text">李昂環顧四周。他現在在一個維護室裡,四周是各種管道和機械設備。房間裡沒有人。</p>
+                        <p class="script-text">他聽到頭頂的管道裡傳來聲音——保安們正在追蹤他。</p>
+                        <p class="script-text">李昂推開維護室的門,走出去。</p>
+                        <p class="script-text">外面是一條走廊。走廊的標識顯示:【中層 28 層】。</p>
+                        <p class="script-text">他成功回到中層了。但現在整個中層也處於戒嚴狀態,到處都是巡邏的保安。</p>
+                        <p class="script-text">李昂需要離開中層,返回下層,回到他的藏身處。</p>
+                        <p class="script-text">但要到達下層,他需要通過至少三道檢查站——而現在所有檢查站都處於最高警戒狀態。</p>
+                        <p class="script-text">就在李昂思考下一步時,他的通訊器響了。</p>
+                        <p class="script-text">是馬克。</p>
+                        <p class="script-text">李昂接通通訊:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"什麼事?"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"兄弟,你搞了什麼？整個飛船都炸了鍋!卡爾已經下令全船搜捕你!"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"我知道。我需要離開中層。"</p>
+                        </div>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"聽著,我們可以幫你。托尼在中層 25 層的轉運站製造了一些混亂,吸引了大部分保安的注意力。你現在去那裡,從貨運通道離開。"</p>
+                        </div>
+                        <p class="script-text">李昂皺眉:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"為什麼要幫我？"</p>
+                        </div>
+                        <p class="script-text">馬克停頓了一秒,然後說:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"因為我們也想知道黑洞計劃到底是什麼。所以你必須活下來,把數據交給我們。明白嗎?"</p>
+                        </div>
+                        <p class="script-text">李昂沒有回答。他掛斷通訊,開始朝著中層 25 層前進。</p>
+                        <p class="script-text">他沿著走廊快步行走,盡量讓自己看起來像一個普通的趕路人。但他的西裝已經破損,臉上有擦傷,背著的公文包也磨破了一角。他看起來一點都不普通。</p>
+                        <p class="script-text">李昂經過一個岔路口時,迎面撞上兩個保安。</p>
+                        <p class="script-text">保安們看到李昂,立刻警覺起來:</p>
+                        <div class="dialogue-box danger">
+                            <p>"站住!出示身份證件!"</p>
+                        </div>
+                        <p class="script-text">李昂沒有停下。他突然加速,衝向保安。</p>
+                        <p class="script-text">第一個保安還沒反應過來,就被李昂一拳打在下巴上。保安仰面倒地,頭撞在牆上,昏了過去。</p>
+                        <p class="script-text">第二個保安拔出電擊槍,但李昂更快。他踢向保安的手腕,電擊槍飛出去。然後李昂用膝蓋頂向保安的腹部,保安彎下腰。李昂用肘擊砸向保安的後頸,保安也昏厥了。</p>
+                        <p class="script-text">整個過程不到五秒。</p>
+                        <p class="script-text">李昂繼續前進,但他知道剛才的打鬥肯定被監控拍到了。很快就會有更多保安趕來。</p>
+                        <p class="script-text">他加快腳步,幾乎是在奔跑。</p>
+                        <p class="script-text">前方出現轉運站的入口——一個巨大的金屬門,門上貼著"貨運通道"的標識。</p>
+                        <p class="script-text">李昂衝進轉運站。</p>
+                        <p class="script-text">轉運站裡一片混亂。</p>
+                        <p class="script-text">到處都是煙霧,警報聲震耳欲聾。幾個貨運機器人倒在地上,冒著火花。地面上散落著各種貨物箱,有些箱子破裂,裡面的東西灑了一地。</p>
+                        <p class="script-text">李昂看到遠處站著兩個人——馬克和托尼。</p>
+                        <p class="script-text">馬克對他揮手:</p>
+                        <div class="dialogue-box">
+                            <p>"這邊!"</p>
+                        </div>
+                        <p class="script-text">李昂跑過去。</p>
+                        <p class="script-text">托尼指著轉運站角落裡的一個貨運電梯:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">托尼：</p>
+                            <p>"從那裡走。那部電梯直通下層,而且現在監控已經被我們黑掉了,沒人會看到你。"</p>
+                        </div>
+                        <p class="script-text">李昂看了看那部電梯,然後看向馬克:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"數據備份。"</p>
+                        </div>
+                        <p class="script-text">馬克伸出手:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"交易公平。"</p>
+                        </div>
+                        <p class="script-text">李昂從公文包裡拿出數據存儲器,快速複製了一份,然後把複製品遞給馬克。</p>
+                        <p class="script-text">馬克接過複製品,臉上露出滿意的笑容:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"合作愉快,兄弟。希望你能活著離開這艘破船。"</p>
+                        </div>
+                        <p class="script-text">李昂沒有回答。他轉身走向貨運電梯。</p>
+                        <p class="script-text">就在他即將進入電梯時,轉運站的大門突然被踹開。</p>
+                        <p class="script-text">卡爾帶著十幾個保安衝了進來。</p>
+                        <p class="script-text">卡爾的目光立刻鎖定了李昂。</p>
+                        <p class="script-text">他沒有喊"站住",沒有命令手下開槍。他只是盯著李昂,眼神冰冷而銳利。</p>
+                        <p class="script-text">然後卡爾緩緩開口:</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"李昂。我就知道是你。"</p>
+                        </div>
+                        <p class="script-text">李昂的心一沉。</p>
+                        <p class="script-text">卡爾認出他了。</p>
+                        <p class="script-text">不對——卡爾一直都知道是他。從在中央大廳見到他的那一刻起,卡爾就已經認出他了。但卡爾沒有當場抓他,而是放他走,然後追蹤他,觀察他,等他露出馬腳。</p>
+                        <p class="script-text">李昂握緊匕首:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"你早就知道了。"</p>
+                        </div>
+                        <p class="script-text">卡爾點頭:</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"七年了。你臉上的疤變淡了,但我還是認出你了。我一直在等你回來。我知道,像你這樣的人,不會甘心就這樣消失。你一定會回來,完成你沒完成的任務。"</p>
+                        </div>
+                        <p class="script-text">李昂看了看周圍——他被包圍了。十幾個保安舉著武器,對準他。</p>
+                        <p class="script-text">沒有退路。</p>
+                        <p class="script-text">李昂深吸一口氣:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"那麼,你打算怎麼辦？"</p>
+                        </div>
+                        <p class="script-text">卡爾沒有回答。他只是舉起手,準備下令開火。</p>
+                        <p class="script-text">就在這時,馬克突然大喊:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"等等!"</p>
+                        </div>
+                        <p class="script-text">所有人的目光都轉向馬克。</p>
+                        <p class="script-text">馬克舉起手裡的數據存儲器:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"卡爾長官,你知道這裡面是什麼嗎？黑洞計劃。船長準備把整艘飛船,連同六萬名乘客,一起送進黑洞。作為交換,議會承諾給他一個新世界的統治權。"</p>
+                        </div>
+                        <p class="script-text">轉運站陷入一片死寂。</p>
+                        <p class="script-text">所有保安都震驚地看著馬克。</p>
+                        <p class="script-text">卡爾的表情沒有變化,但他的手放了下來。</p>
+                        <p class="script-text">馬克繼續說:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-purple-400">馬克：</p>
+                            <p>"你們不信？那我現在就把這份數據公開,讓所有人都看看船長到底在計劃什麼。"</p>
+                        </div>
+                        <p class="script-text">他把數據存儲器插進旁邊的一個公共終端。</p>
+                        <p class="script-text">終端屏幕亮起,顯示出船長的私人日誌:</p>
+                        <div class="system-msg">
+                            【日誌編號:2387-09-15】<br>
+                            【記錄人:船長 威廉·格林】<br>
+                            <br>
+                            黑洞計劃已進入最終階段。永恆號將在 72 小時內抵達 Omega 黑洞邊緣。屆時,我會以"引擎故障"為由,讓飛船偏離航線,直接墜入黑洞事件視界。整個過程會在十五分鐘內完成。<br>
+                            <br>
+                            議會那邊已經確認,只要我完成這次"航行事故",他們就會在新殖民星上給我一塊領地,面積相當於地球上的一個中等國家。六萬條人命,換來一個王國。這筆交易,值。<br>
+                            <br>
+                            至於那些無辜的乘客...他們本來就是社會的最底層,是被淘汰的失敗者。讓他們消失,對人類的進化沒有任何損失。相反,這能讓人類的基因庫更加純淨。<br>
+                            <br>
+                            我不是劊子手。我是進化的推手。
+                        </div>
+                        <p class="script-text">保安們看完日誌,臉色蒼白。</p>
+                        <p class="script-text">有人低聲說:</p>
+                        <div class="dialogue-box">
+                            <p>"這...這不可能..."</p>
+                        </div>
+                        <p class="script-text">卡爾的表情變了。他的眼神不再冰冷,而是充滿了震驚和憤怒。</p>
+                        <p class="script-text">他轉身,對著通訊器下令:</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"所有單位注意。立即前往船長辦公室。逮捕威廉·格林船長,罪名是叛國和謀殺未遂。"</p>
+                        </div>
+                        <p class="script-text">然後他看向李昂:</p>
+                        <div class="dialogue-box danger">
+                             <p class="mb-2 font-bold text-red-400">卡爾：</p>
+                            <p>"走吧。在我改變主意之前。"</p>
+                        </div>
+                        <p class="script-text">李昂愣了一秒,然後轉身,衝進貨運電梯。</p>
+                        <p class="script-text">電梯門關閉。</p>
+                        <p class="script-text">電梯開始下降。</p>
+                        <p class="script-text">李昂靠在電梯牆上,終於鬆了一口氣。</p>
+                        <p class="script-text">他做到了。他拿到了數據,揭露了陰謀,而且還活著。</p>
+                        <p class="script-text">電梯緩慢下降,經過一層又一層。</p>
+                        <p class="script-text">中層 20 層,15 層,10 層,5 層,1 層...</p>
+                        <p class="script-text">下層 5 層,10 層,15 層...</p>
+                        <p class="script-text">李昂的藏身處在下層 30 層。他需要回去,整理數據,然後決定下一步該怎麼做。</p>
+                        <p class="script-text">電梯終於停在下層 30 層。</p>
+                        <p class="script-text">門打開。</p>
+                        <p class="script-text">李昂走出電梯,沿著熟悉的走廊走向他的房間。</p>
+                        <p class="script-text">他推開房間的門。</p>
+                        <p class="script-text">房間裡的一切都和他離開時一樣——那些圖紙還貼在牆上,桌上的馬克杯還擺在原處,連那杯已經徹底冷掉的咖啡都沒有人動過。</p>
+                        <p class="script-text">李昂把公文包放在桌上,拿出數據存儲器。</p>
+                        <p class="script-text">他把存儲器連接到自己的終端,開始仔細查看黑洞計劃的完整內容。</p>
+                        <p class="script-text">越看,他的表情越凝重。</p>
+                        <p class="script-text">這不僅僅是船長的陰謀。整個計劃涉及到議會、軍方、還有幾個大型企業財團。永恆號只是一個實驗——他們想測試,如果讓一艘載滿"無用人口"的飛船消失,會不會有人在意,會不會引起社會動盪。</p>
+                        <p class="script-text">如果實驗成功,他們會進行更大規模的"清洗"。</p>
+                        <p class="script-text">李昂感到一陣寒意。</p>
+                        <p class="script-text">他以為自己只是在揭露一個船長的貪婪和瘋狂。但現在他意識到,這是一個龐大的,系統性的陰謀。</p>
+                        <p class="script-text">而他,只是這個陰謀的一個小小的絆腳石。</p>
+                        <p class="script-text">李昂的視線落在船長日誌的最後一段:</p>
+                        <p class="script-text">計劃執行倒計時:72 小時。</p>
+                        <p class="script-text">李昂看了看終端上顯示的時間。</p>
+                        <p class="script-text">距離他潛入檔案室,已經過去了將近四個小時。</p>
+                        <p class="script-text">也就是說,距離永恆號墜入黑洞,只剩下 68 小時。</p>
+                        <p class="script-text">不到三天。</p>
+                        <p class="script-text">李昂站起來,走到窗前——不對,他的房間沒有窗戶。他只是站在牆邊,盯著那些貼滿牆壁的圖紙。</p>
+                        <p class="script-text">他需要阻止這一切。</p>
+                        <p class="script-text">但他只是一個人。一個前特工,一個下層的黑客,一個被整個系統拋棄的人。</p>
+                        <p class="script-text">他能做什麼？</p>
+                        <p class="script-text">李昂的目光落在桌上的通訊器。</p>
+                        <p class="script-text">馬克和托尼。</p>
+                        <p class="script-text">他們現在也有一份數據備份。而且他們是情報販子,有渠道,有資源。</p>
+                        <p class="script-text">也許...</p>
+                        <p class="script-text">李昂拿起通訊器,準備聯繫馬克。</p>
+                        <p class="script-text">但就在這時,房間的燈突然熄滅了。</p>
+                        <p class="script-text">一片黑暗。</p>
+                        <p class="script-text">李昂本能地抓起匕首,警戒起來。</p>
+                        <p class="script-text">然後,房間角落裡亮起一個小小的紅色指示燈。</p>
+                        <p class="script-text">那個紅色指示燈他很熟悉——和他在檔案室裡發現的那個監控器一模一樣。</p>
+                        <p class="script-text">李昂走過去,仔細查看。</p>
+                        <p class="script-text">果然,牆角貼著一個微型監控器。</p>
+                        <p class="script-text">而這個監控器,不知道已經在這裡監視他多久了。</p>
+                        <p class="script-text">李昂的通訊器突然響了。</p>
+                        <p class="script-text">不是馬克,不是托尼。</p>
+                        <p class="script-text">是一個陌生的頻道。</p>
+                        <p class="script-text">李昂接通。</p>
+                        <p class="script-text">通訊器裡傳來一個聲音——低沉、冷靜、帶著一種詭異的愉悅:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"做得不錯,李昂。你表現得比我預期的要好。"</p>
+                        </div>
+                        <p class="script-text">李昂握緊匕首:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"你是誰?"</p>
+                        </div>
+                        <p class="script-text">聲音笑了:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"我是誰不重要。重要的是,你已經完成了你的任務。你拿到了數據,揭露了船長的陰謀。現在,真正的遊戲可以開始了。"</p>
+                        </div>
+                        <p class="script-text">李昂感到一陣寒意從脊椎爬上來:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"什麼意思?"</p>
+                        </div>
+                        <p class="script-text">聲音說:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"你以為你在揭露真相嗎？不,你只是在按照劇本演出。船長的陰謀?那只是表面。真正的計劃,要比你想像的宏大得多。"</p>
+                        </div>
+                        <p class="script-text">通訊器裡傳來鍵盤敲擊的聲音。</p>
+                        <p class="script-text">然後,李昂的終端屏幕突然亮起。</p>
+                        <p class="script-text">屏幕上顯示出一張照片——是馬克和托尼,站在一個會議室裡,和幾個穿著軍裝的人握手。</p>
+                        <p class="script-text">聲音繼續說:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"馬克和托尼?他們是我安排在你身邊的。他們的任務就是幫助你,確保你能成功潛入檔案室,拿到數據。"</p>
+                        </div>
+                        <p class="script-text">李昂的心沉到谷底。</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"卡爾放你走?那也是我安排的。我需要你活著回到下層,需要你把數據公開,需要你製造混亂。因為只有在混亂中,我才能進行下一步。"</p>
+                        </div>
+                        <p class="script-text">李昂咬緊牙關:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"你到底想要什麼?"</p>
+                        </div>
+                        <p class="script-text">聲音停頓了幾秒,然後說:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"我要永恆號。不是讓它墜入黑洞,而是讓它成為我的。六萬名乘客,一艘巨型飛船,這是一個完美的實驗室。我會把永恆號改造成一個新的社會,一個完全受我控制的社會。"</p>
+                        </div>
+                        <p class="script-text">李昂感到一陣恐懼:</p>
+                        <div class="dialogue-box">
+                             <p class="mb-2 font-bold text-cyan-400">李昂：</p>
+                            <p>"你瘋了。"</p>
+                        </div>
+                        <p class="script-text">聲音笑了:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"瘋了？也許吧。但在這個瘋狂的宇宙裡,只有瘋子才能生存。"</p>
+                        </div>
+                        <p class="script-text">通訊器裡傳來一陣雜音,然後通訊中斷了。</p>
+                        <p class="script-text">李昂站在黑暗的房間裡,握著通訊器,感覺整個世界都在崩塌。</p>
+                        <p class="script-text">他以為自己是揭露陰謀的間諜。</p>
+                        <p class="script-text">但現在他意識到,他只是某個更大棋局裡的棋子。</p>
+                        <p class="script-text">而這個棋局的終點,比他想像的要黑暗得多。</p>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Epilogue -->
+                <section id="epilogue" class="mb-20">
+                    <div class="flex items-center mb-12">
+                         <span class="font-mono text-4xl mr-4 text-neutral-700">END</span>
+                         <h2 class="text-3xl font-bold text-white">尾聲：清掃開始</h2>
+                    </div>
+                    
+                    <div class="font-mono text-xs text-neutral-500 mb-6 border-b border-neutral-800 pb-2">
+                        場景:上層,某個隱秘的房間<br>
+                        時間:同時
+                    </div>
+
+                    <div class="script-segment">
+                        <p class="script-text">鏡頭緩慢推進,進入一個黑暗的房間。</p>
+                        <p class="script-text">房間裡只有一排屏幕,散發著藍色的光芒。</p>
+                        <p class="script-text">屏幕上顯示著永恆號各個角落的監控畫面——下層的走廊、中層的大廳、上層的辦公室、還有李昂的藏身處。</p>
+                        <p class="script-text">一個人影坐在屏幕前。</p>
+                        <p class="script-text">看不清臉,只能看到輪廓——一個瘦削的身影,雙手交疊在膝蓋上。</p>
+                        <p class="script-text">人影輕聲說:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"啟動第二階段。"</p>
+                        </div>
+                        <p class="script-text">屏幕切換,顯示出一艘小型飛船正在接近永恆號。飛船沒有任何標識,外殼是純黑色,在太空中幾乎完全隱形。</p>
+                        <div class="system-msg">
+                            屏幕上標註著:【清掃者小隊】
+                        </div>
+                        <p class="script-text">人影繼續說:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"目標:馬克,托尼,卡爾,還有所有知道黑洞計劃的人。全部清除。"</p>
+                        </div>
+                        <p class="script-text">屏幕再次切換,顯示出馬克和托尼的定位信號。</p>
+                        <div class="system-msg">
+                            信號旁邊標註著:【可清除目標】
+                        </div>
+                        <p class="script-text">人影站起來,走到窗前。</p>
+                        <p class="script-text">窗外是深邃的太空,星辰閃爍。</p>
+                        <p class="script-text">遠處,隱約能看到一個巨大的黑暗漩渦——那是 Omega 黑洞,正緩慢地旋轉,吞噬著周圍的一切。</p>
+                        <p class="script-text">人影低聲說:</p>
+                        <div class="dialogue-box border-red-800 bg-red-950/20">
+                            <p>"永恆號,很快就會是我的了。"</p>
+                        </div>
+                        <p class="script-text">鏡頭緩慢拉遠,離開房間,穿過走廊,穿過飛船的金屬外殼,進入太空。</p>
+                        <p class="script-text">永恆號在黑暗中航行,燈火通明,全然不知命運的齒輪已經開始轉動。</p>
+                        <p class="script-text">在飛船深處,李昂站在他的房間裡,盯著手中的數據存儲器,思考著下一步該怎麼走。</p>
+                        <p class="script-text">在中層,卡爾正帶著士兵衝向船長辦公室,準備實施逮捕。</p>
+                        <p class="script-text">在上層,船長威廉·格林正在銷毀所有證據,準備最後的逃脫。</p>
+                        <p class="script-text">在某個隱秘的房間,神秘人正在下達清掃命令。</p>
+                        <p class="script-text">在太空中,黑色的清掃者飛船正在悄悄接近。</p>
+                        <p class="script-text">所有的線索,所有的陰謀,所有的命運,都在交織,匯聚,走向一個不可知的終點。</p>
+                        <p class="script-text text-center text-neutral-500 my-8">【畫面漸暗】</p>
+                        
+                        <div class="text-center mt-12 mb-12">
+                            <div class="inline-block border border-neutral-700 px-8 py-4 bg-black">
+                                <p class="font-mono text-2xl text-white glow-text mb-2">屏幕上出現一行字:</p>
+                                <p class="font-mono text-4xl text-red-500">"距離抵達 Omega 黑洞: 68 小時"</p>
+                            </div>
+                        </div>
+                        
+                        <p class="text-center text-lg text-white font-bold tracking-widest uppercase">
+                            【全劇終】
+                        </p>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-item');
+            const mainContent = document.getElementById('main-content');
+
+            mainContent.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    // Adjust offset for better trigger point
+                    if (mainContent.scrollTop >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
